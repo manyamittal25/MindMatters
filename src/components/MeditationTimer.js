@@ -7,32 +7,29 @@ const MeditationTimer = () => {
   const [min, setMin] = useState(0);
   const [sec, setSec] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [timerId, setTimerId] = useState(null);
-  const [isConfirmMode, setIsConfirmMode] = useState(false);
-  const [isHrSet, setIsHrSet] = useState(false);
-  const [isMinSet, setIsMinSet] = useState(false);
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isHoursMenuOpen, setIsHoursMenuOpen] = useState(false);
   const [isMinutesMenuOpen, setIsMinutesMenuOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const [selectedHour, setSelectedHour] = useState(null);
-  const [selectedMinute, setSelectedMinute] = useState(null);
+  const [audioTime, setAudioTime] = useState(0);
   const buttonRef = useRef(null);
 
+  const audioRef = useRef(new Audio("/audios/medimusic.mp3"));
+
   useEffect(() => {
-    const track = new Audio("/audios/medimusic.mp3");
+    // const track = new Audio("/audios/medimusic.mp3");
+    const track = audioRef.current;
     if (isPlaying) {
       track.play();
+      track.currentTime = audioTime;
     } else {
       track.pause();
-      track.currentTime = 0;
+      setAudioTime(track.currentTime); 
+    //   track.currentTime = 0;
     }
     return () => {
       track.pause();
     };
   }, [isPlaying]);
-  
 
   useEffect(() => {
     let id;
@@ -67,7 +64,7 @@ const MeditationTimer = () => {
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
-  
+
   const handleClick = () => {
     if (isPlaying) {
       handlePause();
@@ -75,7 +72,7 @@ const MeditationTimer = () => {
       handleStart();
     }
   };
-  
+
   const handleHoursClick = () => {
     setIsHoursMenuOpen(true);
     setIsMinutesMenuOpen(false);
@@ -88,33 +85,34 @@ const MeditationTimer = () => {
 
   const getDropdownPosition = () => {
     if (buttonRef.current) {
-      const { top, left, width } = buttonRef.current.getBoundingClientRect();
+      const { top, left, height } = buttonRef.current.getBoundingClientRect();
       return {
-        top: top + window.scrollY + buttonRef.current.offsetHeight + 10,
-        left: left + window.scrollX,
+        top: top + window.scrollY + height - 80, // Shift up by reducing margin
+        left: left + window.scrollX + 10, // Position slightly to the right of the button
       };
     }
     return { top: 0, left: 0 };
   };
+  
+  
 
   const handleHrSelect = (hour) => {
-    setSelectedHour(hour);
+    setHr(hour);
     setIsHoursMenuOpen(false);
     setIsDropdownOpen(false); // Close the dropdown after selection
   };
-  
+
   const handleMinSelect = (minute) => {
-    setSelectedMinute(minute);
+    setMin(minute);
     setIsMinutesMenuOpen(false);
     setIsDropdownOpen(false); // Close the dropdown after selection
   };
-  
 
   const handlePause = () => {
+    
     setIsPlaying(false);
-    clearInterval(timerId); // Clear the timer when pausing
   };
-  
+
   const handleStart = () => {
     if (hr === 0 && min === 0 && sec === 0) {
       alert("Please set a timer duration.");
@@ -122,24 +120,6 @@ const MeditationTimer = () => {
     }
     setIsPlaying(true);
   };
-  
-
-  const handleConfirm = () => {
-    if (selectedHour !== null && selectedMinute !== null) {
-      setHr(selectedHour);
-      setMin(selectedMinute);
-      setSec(0);
-      setIsConfirmMode(true);
-    } else {
-      alert("Please select both hours and minutes.");
-    }
-    setIsDropdownOpen(false);
-  };
-
-  useEffect(() => {
-    console.log(`Timer Updated - Hours: ${hr}, Minutes: ${min}, Seconds: ${sec}`);
-  }, [hr, min, sec]);
-  
 
   const containerStyle = {
     backgroundImage: 'url("/images/page2_img.jpg")',
@@ -163,7 +143,6 @@ const MeditationTimer = () => {
   const timeBoxStyle = {
     height: "250px",
     width: "250px",
-    backgroundColor: "rgb(144, 238, 144, 0.7)",
     fontSize: "120px",
     textAlign: "center",
     display: "flex",
@@ -172,7 +151,7 @@ const MeditationTimer = () => {
     flexDirection: "column",
     margin: "0", // Remove margin to place boxes closer together
     color: "aliceblue",
-    textShadow: "4px 4px 8px rgba(8, 8, 8, 0.3)",
+    textShadow: "6px 6px 12px rgba(0, 0, 0, 0.6)", // Darker shadow with increased blur
   };
 
   const additionalBoxStyle = {
@@ -207,7 +186,7 @@ const MeditationTimer = () => {
 
   const keepTimeStyle = {
     position: "relative",
-    top: "30px",
+    top: "140px",
     fontSize: "20px",
     color: "rgb(6, 100, 1)",
     fontWeight: "bold",
@@ -268,6 +247,17 @@ const MeditationTimer = () => {
     ); /* Added shadow effect */
   `;
 
+  const InfoText = styled.p`
+  font-size: 30px; /* Increased font size */
+  color: white; /* Text color set to white */
+  font-weight: bold; /* Bold text */
+  text-align: center; /* Center text */
+  margin: 20px 0; /* Margin for spacing */
+    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.8);  /* Added shadow effect */
+  margin-top: -40px;
+`;
+
+
   return (
     <div style={containerStyle}>
       <Link id="link_id" href="/meditation">
@@ -282,208 +272,67 @@ const MeditationTimer = () => {
           style={{ display: "flex", justifyContent: "center" }}
         >
           <div
-            className="time_box_wrapper"
-            style={{ textAlign: "center", marginRight: "25px" }}
+            className="time-box"
+            style={timeBoxStyle}
+            onClick={toggleDropdown}
+            ref={buttonRef}
           >
-            <div className="time_box" style={timeBoxStyle}>
-              {formatTime(hr)}
-            </div>
-            <div className="additional_box" style={additionalBoxStyle}>
-              Hours
-            </div>
-          </div>
-          <div
-            className="time_box_wrapper"
-            style={{ textAlign: "center", marginRight: "25px" }}
-          >
-            <div className="time_box" style={timeBoxStyle}>
-              {formatTime(min)}
-            </div>
-            <div className="additional_box" style={additionalBoxStyle}>
-              Minutes
-            </div>
-          </div>
-          <div className="time_box_wrapper" style={{ textAlign: "center" }}>
-            <div className="time_box" style={timeBoxStyle}>
-              {formatTime(sec)}
-            </div>
-            <div className="additional_box" style={additionalBoxStyle}>
-              Seconds
-            </div>
+            {formatTime(hr)}:{formatTime(min)}:{formatTime(sec)}
           </div>
         </div>
+
+        <InfoText>Tap above the timer to choose your meditation duration and start your journey!</InfoText>
+
+        <div className="keep_time" style={keepTimeStyle}>
+          {isPlaying ? "Timer is active" : "Timer is paused"}
+        </div>
       </div>
-      {/* <div id="warn_id" style={warnStyle}>Warning</div> */}
-      <div className="btn_class" style={timeClassStyle}>
-        <button ref={buttonRef} style={buttonStyle} onClick={toggleDropdown}>
-          {isPlaying ? "Pause" : "Start"}
-        </button>
+      <div className="dropdown">
+  {isDropdownOpen && (
+    <div
+      style={{
+        position: "absolute",
+        top: getDropdownPosition().top,
+        left: getDropdownPosition().left,
+        backgroundColor: "#fff",
+        border: "1px solid #ddd",
+        padding: "10px",
+        zIndex: 1000,
+      }}
+    >
+      <div>
+        <button onClick={handleHoursClick}>Hours</button>
+        <button onClick={handleMinutesClick}>Minutes</button>
       </div>
-      <br />
-      <br />
-      <div id="keep_time" style={keepTimeStyle}>
-        Time Record
-      </div>
-      {isDropdownOpen && (
-        <div
-          style={{
-            position: "absolute",
-            top: getDropdownPosition().top,
-            left: getDropdownPosition().left,
-            backgroundColor: "white",
-            border: "1px solid #ddd",
-            borderRadius: "5px",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-            zIndex: 1000,
-            display: "flex", // Use flexbox for horizontal layout
-            gap: "10px", // Space between items
-            padding: "10px", // Padding around the items
-          }}
-        >
-          <div
-            onClick={handleHoursClick}
-            style={{
-              padding: "10px",
-              borderBottom: "1px solid #ddd",
-              cursor: "pointer",
-              whiteSpace: "nowrap", // Prevent text wrapping
-            }}
-          >
-            Hours
-          </div>
-          {isHoursMenuOpen && (
-            <div style={{ display: "flex", gap: "10px", flexDirection: "row" }}>
-              <div
-                onClick={() => handleHrSelect(0)}
-                style={{
-                  padding: "10px",
-                  borderBottom: "1px solid #ddd",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                0 hours
-              </div>
-              <div
-                onClick={() => handleHrSelect(1)}
-                style={{
-                  padding: "10px",
-                  borderBottom: "1px solid #ddd",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                1 hour
-              </div>
-              <div
-                onClick={() => handleHrSelect(2)}
-                style={{
-                  padding: "10px",
-                  borderBottom: "1px solid #ddd",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                2 hours
-              </div>
-              <div
-                onClick={() => handleHrSelect(3)}
-                style={{
-                  padding: "10px",
-                  borderBottom: "1px solid #ddd",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                3 hours
-              </div>
-              <div
-                onClick={() => handleHrSelect(4)}
-                style={{
-                  padding: "10px",
-                  borderBottom: "none",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                4 hours
-              </div>
-            </div>
-          )}
-          <div
-            onClick={handleMinutesClick}
-            style={{
-              padding: "10px",
-              borderBottom: "1px solid #ddd",
-              cursor: "pointer",
-              whiteSpace: "nowrap",
-            }}
-          >
-            Minutes
-          </div>
-          {isMinutesMenuOpen && (
-            <div style={{ display: "flex", gap: "10px", flexDirection: "row" }}>
-              <div
-                onClick={() => handleMinSelect(0)}
-                style={{
-                  padding: "10px",
-                  borderBottom: "1px solid #ddd",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                0 minutes
-              </div>
-              <div
-                onClick={() => handleMinSelect(0.1)}
-                style={{
-                  padding: "10px",
-                  borderBottom: "1px solid #ddd",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                0.1 minute
-              </div>
-              <div
-                onClick={() => handleMinSelect(10)}
-                style={{
-                  padding: "10px",
-                  borderBottom: "1px solid #ddd",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                10 minutes
-              </div>
-              <div
-                onClick={() => handleMinSelect(20)}
-                style={{
-                  padding: "10px",
-                  borderBottom: "none",
-                  cursor: "pointer",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                20 minutes
-              </div>
-            </div>
-          )}
-          <button
-            onClick={handleConfirm}
-            style={{
-              width: "auto",
-              padding: "10px",
-              backgroundColor: "#4CAF50",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-            }}
-          >
-            Confirm
-          </button>
+      {isHoursMenuOpen && (
+        <div>
+          {Array.from({ length: 12 }, (_, i) => (
+            <button key={i} onClick={() => handleHrSelect(i)}>
+              {i}
+            </button>
+          ))}
         </div>
       )}
+      {isMinutesMenuOpen && (
+        <div>
+          {Array.from({ length: 60 }, (_, i) => (
+            <button key={i} onClick={() => handleMinSelect(i)}>
+              {i}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  )}
+</div>
+
+      <button
+        className="toggle-button"
+        style={buttonStyle}
+        onClick={handleClick}
+      >
+        {isPlaying ? "Pause" : "Start"}
+      </button>
     </div>
   );
 };
