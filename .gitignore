@@ -28,3 +28,4 @@ Backend/.idea
 Backend/app/__pycache__
 Backend/app/models/__pycache__
 Backend/app/routes/__pycache__
+node_modules
