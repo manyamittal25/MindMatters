@@ -24,9 +24,13 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     jwt.init_app(app)
     
+   
+
     from .routes.tryingauth import auth_bp
     from .routes.api import api_bp
     app.register_blueprint(auth_bp,url_prefix='/auth')
     app.register_blueprint(api_bp, url_prefix='/api')
     
+    from .routes.blogs import blog_bp
+    app.register_blueprint(blog_bp)
     return app

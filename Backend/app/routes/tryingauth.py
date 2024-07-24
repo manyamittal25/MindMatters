@@ -6,6 +6,7 @@ import os
 from ..models.user import User
 from .. import db
 
+
 auth_bp = Blueprint('auth', __name__)
 
 oauth = OAuth()
@@ -26,10 +27,12 @@ google = oauth.remote_app(
 
 @auth_bp.route('/')
 def index():
+
     return jsonify(message="Welcome to the OAuth with JWT example")
 
 @auth_bp.route('/login/google')
 def login_google():
+    
     return google.authorize(callback=url_for('auth.google_authorized', _external=True))
 
 @auth_bp.route('/callback')
