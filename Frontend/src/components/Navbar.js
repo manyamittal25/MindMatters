@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
+import { FaUser, FaHome, FaInfoCircle, FaServicestack, FaBook, FaSignInAlt, FaSignOutAlt } from 'react-icons/fa'; // Added more icons
 
-// Keyframes for zoom animation
 const zoom = keyframes`
   0%, 100% {
     transform: scale(1);
@@ -12,7 +12,6 @@ const zoom = keyframes`
   }
 `;
 
-// Keyframes for zoom in and zoom out animation for the background
 const zoomInOut = keyframes`
   0% {
     transform: scale(1);
@@ -25,9 +24,8 @@ const zoomInOut = keyframes`
   }
 `;
 
-// Navigation bar container with background color and padding
 const Nav = styled.nav`
-  background: #fff8dc; /* Light background color */
+  background: #fff8dc;
   height: 70px;
   display: flex;
   justify-content: space-between;
@@ -35,10 +33,9 @@ const Nav = styled.nav`
   padding: 0 40px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
-  overflow: hidden;
+  overflow: visible; /* Ensure the dropdown is not cut off */
 `;
 
-// Styling for the SVG background
 const NavSvgBackground = styled.div`
   position: absolute;
   top: 0;
@@ -46,25 +43,25 @@ const NavSvgBackground = styled.div`
   width: 100%;
   height: 100%;
   z-index: 0;
-  opacity: 0.1; /* Make the SVG subtle */
+  opacity: 0.1;
   animation: ${zoomInOut} 10s infinite;
-  pointer-events: none; /* Allow clicks to pass through */
+  pointer-events: none;
 `;
 
-// Styling for the navigation links
 const NavLink = styled(Link)`
-  color: #4a4a4a; /* Dark text color */
+  color: #4a4a4a;
   text-decoration: none;
   margin: 0 15px;
   font-size: 18px;
-  font-family: 'Roboto', sans-serif; /* Modern font style */
-  z-index: 1; /* Ensure links are above the SVG */
+  font-family: 'Roboto', sans-serif;
+  display: flex;
+  align-items: center;
+  z-index: 1;
   &:hover {
-    color: #3a6ea5; /* Hover color */
+    color: #3a6ea5;
   }
 `;
 
-// Special styling for the "Login" button
 const LoginButton = styled(Link)`
   background: #fff;
   color: #4a4a4a;
@@ -74,24 +71,63 @@ const LoginButton = styled(Link)`
   text-decoration: none;
   font-size: 18px;
   font-family: 'Roboto', sans-serif;
-  z-index: 1; /* Ensure button is above the SVG */
+  z-index: 1;
+  display: flex;
+  align-items: center;
   &:hover {
-    background: #f0f0f0; /* Hover background color */
-    color: #3a6ea5; /* Hover text color */
+    background: #f0f0f0;
+    color: #3a6ea5;
   }
 `;
 
-// Styling for the "MindMatters" text
 const Logo = styled.div`
-  font-family: 'Pacifico', cursive; /* Artistic font */
+  font-family: 'Pacifico', cursive;
   font-size: 24px;
   color: #3a6ea5;
   z-index: 1;
   animation: ${zoom} 3s infinite;
 `;
 
-// Navbar component structure
-const Navbar = () => {
+const UserMenu = styled.div`
+  position: relative;
+  z-index: 1;
+`;
+
+const Username = styled.div`
+  color: #4a4a4a;
+  font-size: 18px;
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  &:hover {
+    color: #3a6ea5;
+  }
+`;
+
+const DropdownContent = styled.div`
+  display: ${(props) => (props.show ? 'block' : 'none')};
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  right: 0;
+`;
+
+const DropdownItem = styled(Link)`
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  &:hover {
+    background-color: #f1f1f1;
+  }
+`;
+
+const Navbar = ({ username, onLogout }) => {
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
   return (
     <Nav>
       <NavSvgBackground>
@@ -101,12 +137,28 @@ const Navbar = () => {
       </NavSvgBackground>
       <Logo>MindMatters</Logo>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/about">About Us</NavLink>
-        <NavLink to="/services">Services</NavLink>
-        <NavLink to="/resources">Resources</NavLink>
-        <NavLink to="/get-started">Get Started</NavLink>
-        <LoginButton to="/login">Login | SignUp</LoginButton>
+        <NavLink to="/"><FaHome /> Home</NavLink>
+        <NavLink to="/about"><FaInfoCircle /> About Us</NavLink>
+        <NavLink to="/services"><FaServicestack /> Services</NavLink>
+        <NavLink to="/resources"><FaBook /> Resources</NavLink>
+        <NavLink to="/get-started"><FaSignInAlt /> Get Started</NavLink>
+        {username ? (
+          <UserMenu>
+            <Username onClick={() => setDropdownOpen(!dropdownOpen)}>
+              <FaUser /> {username} ▼
+            </Username>
+            <DropdownContent show={dropdownOpen}>
+              <DropdownItem to="/dashboard">Dashboard</DropdownItem>
+              <DropdownItem to="#" onClick={onLogout}>
+                <FaSignOutAlt /> Logout
+              </DropdownItem>
+            </DropdownContent>
+          </UserMenu>
+        ) : (
+          <LoginButton to="/login">
+            <FaSignInAlt /> Login
+          </LoginButton>
+        )}
       </div>
     </Nav>
   );

@@ -1,0 +1,142 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f9f9f9;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.dashboard {
+  padding: 40px;
+  min-height: 100vh;
+  background-image: url('/images/db.jpg');
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 0;
+  background-color: #5D6D7E;
+  color: #fff;
+  font-size: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-size: 28px;
+  font-weight: bold;
+  animation: fadeInOut 5s infinite;
+}
+
+.user-details {
+  font-size: 20px;
+}
+
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  margin-bottom: 30px;
+}
+
+.hero {
+  padding: 30px;
+  border-radius: 12px;
+  background-color: #AED6F1;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  animation: pulse 8s infinite;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.card {
+  flex: 1;
+  min-width: 150px;
+  padding: 20px;
+  background-color: #D5DBDB;
+  border: 1px solid #B3B6B7;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 18px;
+}
+
+.chat-section {
+  text-align: center;
+}
+
+.chat-button {
+  padding: 12px 25px;
+  font-size: 18px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  animation: pulse 6s infinite;
+}
+
+.chat-button:hover {
+  background-color: #0056b3;
+}
+
+.welcome-section {
+  text-align: center;
+  margin-top: 30px;
+  padding: 25px;
+  background-color: #FAD7A0;
+  border-radius: 12px;
+  animation: slideIn 10s infinite;
+}
+
+.footer {
+  padding: 15px 0;
+  text-align: center;
+  background-color: #5D6D7E;
+  color: #fff;
+}
+
+/* Keyframe Animations */
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

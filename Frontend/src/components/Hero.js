@@ -52,7 +52,7 @@ const StatCard = styled.div`
 const HeroSection = styled.section`
   width: 100vw;
   height: 120vh;
-  background: url('/images/hero-image.jpg') center top/cover no-repeat; /* Adjust background position */
+  background: url('/images/hero-image.jpg') center top/cover no-repeat; 
   display: flex;
   flex-direction: column;
   align-items: center;
