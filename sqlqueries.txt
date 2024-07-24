@@ -1,0 +1,17 @@
+CREATE TABLE quiz_adhd (
+    id SERIAL PRIMARY KEY,
+    question TEXT,
+    very_often INT default 4,
+    often INT default 3,
+    sometimes INT default 2,
+    never INT default 1
+);
+
+CREATE TABLE quiz_anxiety (
+    id SERIAL PRIMARY KEY,
+    question TEXT,
+    very_often INT default 4,
+    often INT default 3,
+    sometimes INT default 2,
+    never INT default 1
+);
