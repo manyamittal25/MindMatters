@@ -7,7 +7,10 @@ import ResourcesPage from './pages/ResourcesPage';
 import MeditationHelper from './components/MeditationHelper';
 import MeditationTimer from './components/MeditationTimer';
 import SelfAssess from './components/SelfAssessment/SelfAssess';
-import DepressionTest from './components/SelfAssessment/DepressionTest'; 
+import DepressionTest from './components/SelfAssessment/DepressionTest';
+import AuthNavbar from './components/NavbarAuth';
+import AuthCallback from './components/AuthCallback';
+import Dashboard from './components/Dashboard';
 
 const AppContent = () => {
   const location = useLocation();
@@ -16,14 +19,17 @@ const AppContent = () => {
   return (
     <>
       <GlobalStyle />
-      {showNavbar && <Navbar />}
+      {showNavbar && <AuthNavbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/resources" element={<ResourcesPage />} />
         <Route path="/self-assessment" element={<SelfAssess />} />
         <Route path="/meditation" element={<MeditationHelper />} />
         <Route path="/meditation-timer" element={<MeditationTimer />} />
-        <Route path="/depressiontest" element={<DepressionTest />} /> 
+        <Route path="/depressiontest" element={<DepressionTest />} />
+        <Route path='/authCallback' element={<AuthCallback />} />
+        <Route path='/dashboard' element={<Dashboard />} />
+
       </Routes>
     </>
   );

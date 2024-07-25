@@ -53,7 +53,9 @@ def google_authorized():
         db.session.commit()
 
     jwt_token = create_access_token(identity=username)
-    return jsonify(access_token=jwt_token)
+    print(jwt_token)
+    redirect_url=os.environ.get('FRONTEND_URL')
+    return redirect(f'{redirect_url}authCallback?access_token={jwt_token}')
 
 @google.tokengetter
 def get_google_oauth_token():
@@ -64,3 +66,19 @@ def get_google_oauth_token():
 def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
+
+@auth_bp.route('/getUser',methods=['GET'])
+@jwt_required()
+def getUserInfo():
+    
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(username=current_user).first()
+    data={
+        'email':user.email,
+        'name':user.name,
+        'diagnosis': user.diagnosis,
+
+
+
+    }
+    return jsonify(data)
