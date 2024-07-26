@@ -7,14 +7,14 @@ import ResourcesPage from './pages/ResourcesPage';
 import MeditationHelper from './components/MeditationHelper';
 import MeditationTimer from './components/MeditationTimer';
 import SelfAssess from './components/SelfAssessment/SelfAssess';
-import DepressionTest from './components/SelfAssessment/DepressionTest';
+import GeneralTest from './components/SelfAssessment/GeneralTest';
 import AuthNavbar from './components/NavbarAuth';
 import AuthCallback from './components/AuthCallback';
 import Dashboard from './components/Dashboard';
 import BlogList from './components/Blogs/BlogList';
 import BlogDetails from './components/Blogs/BlogDetails';
 import CreateBlog from './components/Blogs/CreateBlog';
-import GeneralTest from './components/SelfAssessment/GeneralTest';
+import Footer from './components/Footer';
 
 const AppContent = () => {
   const location = useLocation();
@@ -23,7 +23,7 @@ const AppContent = () => {
   return (
     <>
       <GlobalStyle />
-      {showNavbar && <AuthNavbar />}
+      {showNavbar ? <Navbar /> : <AuthNavbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/resources" element={<ResourcesPage />} />
@@ -31,12 +31,13 @@ const AppContent = () => {
         <Route path="/meditation" element={<MeditationHelper />} />
         <Route path="/meditation-timer" element={<MeditationTimer />} />
         <Route path="/depressiontest" element={<GeneralTest />} />
-        <Route path='/authCallback' element={<AuthCallback />} />
-        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path="/authCallback" element={<AuthCallback />} />
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/blogs" element={<BlogList />} />
         <Route path="/blog/:id" element={<BlogDetails />} />
         <Route path="/create-blog" element={<CreateBlog />} />
       </Routes>
+      <Footer />
     </>
   );
 };

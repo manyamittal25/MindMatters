@@ -38,6 +38,7 @@ const Nav = styled.nav`
   overflow: hidden;
 `;
 
+
 // Styling for the SVG background
 const NavSvgBackground = styled.div`
   position: absolute;
@@ -106,7 +107,7 @@ const Navbar = () => {
         <NavLink to="/">Home</NavLink>
         <NavLink to="/about">About Us</NavLink>
         <NavLink to="/services">Services</NavLink>
-          <NavLink to="/resources">Resources</NavLink>
+          <NavLink to="/blogs">Resources</NavLink>
         <NavLink to="/self-assessment">Self Assessment</NavLink>
         <LoginButton to="/login">Login | SignUp</LoginButton>
       </div>
