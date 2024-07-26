@@ -1,24 +1,37 @@
 from flask import Blueprint, jsonify, request, redirect, url_for
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from ..models.test import Test
+from ..models.test import Test2
 from ..models.user import User
-from sqlalchemy import update
+from sqlalchemy import update,MetaData,Table,Column
+from sqlalchemy.orm import mapper
+from sqlalchemy.orm import sessionmaker
 test_bp = Blueprint('test', __name__)
 from .. import db
-@test_bp.route('/')
+
+
+def create_test_model(tablename):
+    """Creates a Test model with the specified tablename."""
+   
+    class Test(Test2):
+        __tablename__ = tablename
+        __table_args__ = {'extend_existing': True} 
+    
+    
+    
+    return Test
+
+@test_bp.route('/',methods=['GET'])
 # @jwt_required()
 def get_test():
     topic = request.args.get('topic')
     table_name = f'quiz_{topic}'
     print(table_name)
-    
-    Test.set_tablename(table_name)
-    
-    with db.engine.connect() as connection:
-        # Reflect the new table name
-        Test.metadata.reflect(bind=connection, only=[table_name])
-        table = Test.__table__
-        data = connection.execute(table.select()).fetchall()
+    TestModel=create_test_model(table_name)
+    Session = sessionmaker(bind=db.engine)
+    session = Session()
+
+# Query all records from TestModel
+    results = session.query(TestModel).all()
 
     test_data = [{
         'question': row.question,
@@ -26,7 +39,7 @@ def get_test():
         'often': row.often,
         'sometimes': row.sometimes,
         'never': row.never
-    } for row in data]
+    } for row in results]
 
     return jsonify(test_data), 200
 
