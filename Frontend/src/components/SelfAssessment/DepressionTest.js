@@ -2,97 +2,97 @@ import React, { useState } from "react";
 import styled from "styled-components";
 
 const questions = [
-    {
-      question: "Describe your current mood.",
-      options: [
-        { answer: "Pretty happy", points: 1 },
-        { answer: "I am worried about some things", points: 2 },
-        { answer: "Antisocial", points: 3 },
-        { answer: "Terrible, I'm fed up", points: 4 }
-      ]
-    },
-    {
-      question: "Do you often feel restless or unable to sit still?",
-      options: [
-        { answer: "Never", points: 1 },
-        { answer: "Sometimes", points: 2 },
-        { answer: "Often", points: 3 },
-        { answer: "Always", points: 4 }
-      ]
-    },
-    {
-      question: "Do you have trouble sleeping or staying asleep?",
-      options: [
-        { answer: "Never", points: 1 },
-        { answer: "Sometimes", points: 2 },
-        { answer: "Often", points: 3 },
-        { answer: "Always", points: 4 }
-      ]
-    },
-    {
-      question: "Do you experience racing thoughts or have difficulty concentrating?",
-      options: [
-        { answer: "Never", points: 1 },
-        { answer: "Sometimes", points: 2 },
-        { answer: "Often", points: 3 },
-        { answer: "Always", points: 4 }
-      ]
-    },
-    {
-      question: "Do you feel tired or lack energy on a regular basis?",
-      options: [
-        { answer: "Never", points: 1 },
-        { answer: "Sometimes", points: 2 },
-        { answer: "Often", points: 3 },
-        { answer: "Always", points: 4 }
-      ]
-    },
-    {
-      question: "Do you feel a sense of hopelessness or despair?",
-      options: [
-        { answer: "Never", points: 1 },
-        { answer: "Sometimes", points: 2 },
-        { answer: "Often", points: 3 },
-        { answer: "Always", points: 4 }
-      ]
-    },
-    {
-      question: "Choose a Quote",
-      options: [
-        { answer: "Always look on the bright side of life", points: 1 },
-        { answer: "Worrying is as productive chewing gum", points: 2 },
-        { answer: "Life's a bitch, then you die", points: 3 },
-        { answer: "Hard times reveal true friends", points: 4 }
-      ]
-    },
-    {
-      question: "What's your role in your family?",
-      options: [
-        { answer: "The fun, sociable one", points: 1 },
-        { answer: "The sensible one", points: 2 },
-        { answer: "I don't have a role, I'm an outsider", points: 3 } ,
-        { answer: "The quiet one", points: 4 }
-      ]  
-    },
-    {
-      question: "Are you in control of your Emotions?",
-      options: [
-        { answer: "Yes, pretty much all of the time", points: 1 },
-        { answer: "Not really, no", points: 2 },
-        { answer: "I don't really have emotions", points: 3 } ,
-        { answer: "Yes, I'd say so", points: 4 }
-      ]  
-    },
-    {
-      question: "Do you find yourself engaging in compulsive or addictive behaviors like substance use, gambling, or excessive spending?",
-      options: [
-        { answer: "Never", points: 1 },
-        { answer: "Sometimes", points: 2 },
-        { answer: "Often", points: 3 },
-        { answer: "Always", points: 4 }
-      ]
-    }
-  ];
+  {
+    question: "Describe your current mood.",
+    options: [
+      { answer: "Pretty happy", points: 1 },
+      { answer: "I am worried about some things", points: 2 },
+      { answer: "Antisocial", points: 3 },
+      { answer: "Terrible, I'm fed up", points: 4 }
+    ]
+  },
+  {
+    question: "Do you often feel restless or unable to sit still?",
+    options: [
+      { answer: "Never", points: 1 },
+      { answer: "Sometimes", points: 2 },
+      { answer: "Often", points: 3 },
+      { answer: "Always", points: 4 }
+    ]
+  },
+  {
+    question: "Do you have trouble sleeping or staying asleep?",
+    options: [
+      { answer: "Never", points: 1 },
+      { answer: "Sometimes", points: 2 },
+      { answer: "Often", points: 3 },
+      { answer: "Always", points: 4 }
+    ]
+  },
+  {
+    question: "Do you experience racing thoughts or have difficulty concentrating?",
+    options: [
+      { answer: "Never", points: 1 },
+      { answer: "Sometimes", points: 2 },
+      { answer: "Often", points: 3 },
+      { answer: "Always", points: 4 }
+    ]
+  },
+  {
+    question: "Do you feel tired or lack energy on a regular basis?",
+    options: [
+      { answer: "Never", points: 1 },
+      { answer: "Sometimes", points: 2 },
+      { answer: "Often", points: 3 },
+      { answer: "Always", points: 4 }
+    ]
+  },
+  {
+    question: "Do you feel a sense of hopelessness or despair?",
+    options: [
+      { answer: "Never", points: 1 },
+      { answer: "Sometimes", points: 2 },
+      { answer: "Often", points: 3 },
+      { answer: "Always", points: 4 }
+    ]
+  },
+  {
+    question: "Choose a Quote",
+    options: [
+      { answer: "Always look on the bright side of life", points: 1 },
+      { answer: "Worrying is as productive chewing gum", points: 2 },
+      { answer: "Life's a bitch, then you die", points: 3 },
+      { answer: "Hard times reveal true friends", points: 4 }
+    ]
+  },
+  {
+    question: "What's your role in your family?",
+    options: [
+      { answer: "The fun, sociable one", points: 1 },
+      { answer: "The sensible one", points: 2 },
+      { answer: "I don't have a role, I'm an outsider", points: 3 },
+      { answer: "The quiet one", points: 4 }
+    ]
+  },
+  {
+    question: "Are you in control of your Emotions?",
+    options: [
+      { answer: "Yes, pretty much all of the time", points: 1 },
+      { answer: "Not really, no", points: 2 },
+      { answer: "I don't really have emotions", points: 3 },
+      { answer: "Yes, I'd say so", points: 4 }
+    ]
+  },
+  {
+    question: "Do you find yourself engaging in compulsive or addictive behaviors like substance use, gambling, or excessive spending?",
+    options: [
+      { answer: "Never", points: 1 },
+      { answer: "Sometimes", points: 2 },
+      { answer: "Often", points: 3 },
+      { answer: "Always", points: 4 }
+    ]
+  }
+];
 
 const QuizContainer = styled.div`
   min-height: 89.8svh;
