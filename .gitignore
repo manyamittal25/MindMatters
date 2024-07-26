@@ -24,8 +24,9 @@ Frontend/yarn-error.log*
 
 Backend/.env
 Backend/.idea
-
+Backend/venv
 Backend/app/__pycache__
 Backend/app/models/__pycache__
 Backend/app/routes/__pycache__
+
 node_modules
