@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { GrLike } from 'react-icons/gr';
+import { BACKEND_URL } from '../../urls';
 
 // Blog Details Container
 const BlogDetailsContainer = styled.div`
@@ -133,14 +134,14 @@ const BlogDetails = () => {
 
     useEffect(() => {
         const fetchBlog = async () => {
-            const response = await fetch(`/blogId?id=${id}`);
+            const response = await fetch(`${BACKEND_URL}blogId?id=${id}`);
             const data = await response.json();
             setBlog(data[0]);
             setLikes(data[0].likes);
         };
 
         const fetchRelatedBlogs = async () => {
-            const response = await fetch(`/simToBlogId?id=${id}`);
+            const response = await fetch(`${BACKEND_URL}simToBlogId?id=${id}`);
             const data = await response.json();
             setRelatedBlogs(data);
         };
@@ -149,10 +150,28 @@ const BlogDetails = () => {
         fetchRelatedBlogs();
     }, [id]);
 
+    // useEffect(() => {
+    //     const fetchLikeStatus = async () => {
+    //         const response = await fetch(`${BACKEND_URL}hasLiked?id=${id}`);
+    //         const data = await response.json();
+    //         console.log(`rcvd like data: ${data}`)
+    //         setLikes(data[0].likes);
+    //     };
+
+    //     const fetchRelatedBlogs = async () => {
+    //         const response = await fetch(`${BACKEND_URL}simToBlogId?id=${id}`);
+    //         const data = await response.json();
+    //         setRelatedBlogs(data);
+    //     };
+
+    //     fetchBlog();
+    //     fetchRelatedBlogs();
+    // }, [id]);
+
     const handleLike = async () => {
         if (hasLiked) return;
 
-        
+
         const response = await fetch(`/likeBlog`, {
             method: 'POST',
             headers: {
@@ -174,12 +193,12 @@ const BlogDetails = () => {
                     <>
                         <h2>{blog.title}</h2>
                         <p>{blog.content}</p>
-                        <br/>
+                        <br />
                         <h3>Author: {blog.author}</h3>
                         <h4>Upload Date: {new Date(blog.upload_date).toLocaleDateString()}</h4>
                         <h5>Likes: {likes}</h5>
                         <LikeButton onClick={handleLike} disabled={hasLiked}>
-                            <GrLike color={hasLiked ? '#ff0000' : '#ffffff'} /> 
+                            <GrLike color={hasLiked ? '#ff0000' : '#ffffff'} />
                             {hasLiked ? 'Liked' : 'Like'}
                         </LikeButton>
                     </>
@@ -191,7 +210,7 @@ const BlogDetails = () => {
                     {relatedBlogs.map(rBlog => (
                         <RelatedBlogItem key={rBlog.id}>
                             <BlogLink to={`/blog/${rBlog.id}`}>
-                                <RelatedBlogImage src={rBlog.image} alt={rBlog.title} />
+                                <RelatedBlogImage src={rBlog.imagelink} alt={rBlog.title} />
                                 <BlogTitle>{rBlog.title}</BlogTitle>
                                 <RelatedBlogMeta>
                                     <RelatedBlogAuthor>Author: {rBlog.author}</RelatedBlogAuthor>
