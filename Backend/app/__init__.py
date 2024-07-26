@@ -1,9 +1,10 @@
-from flask import Flask
+from flask import Flask,request,make_response
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from .config import Config
 import os
+from flask_cors import CORS  
 from dotenv import load_dotenv
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
 
@@ -27,6 +28,7 @@ class Base:
 
 def create_app(config_class=Config):
     app = Flask(__name__)
+    CORS(app)
     load_dotenv()
     app.config.from_object(config_class)
     
@@ -37,6 +39,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     jwt.init_app(app)
     
+   
     from .routes.tryingauth import auth_bp
     from .routes.api import api_bp
     from .routes.blogs import blog_bp
@@ -45,5 +48,15 @@ def create_app(config_class=Config):
     app.register_blueprint(api_bp, url_prefix='/api')
     app.register_blueprint(blog_bp)
     app.register_blueprint(test_bp,url_prefix='/test')
+
+    # @app.before_request
+    # def handle_options_request():
+    #     if request.method == 'OPTIONS':
+    #         response = make_response()
+    #         response.headers.add("Access-Control-Allow-Origin", "http://localhost:3000")
+    #         response.headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization")
+    #         response.headers.add("Access-Control-Allow-Methods", "GET,OPTIONS")
+    #         response.headers.add("Access-Control-Allow-Credentials", "true")
+    #         return response
     
     return app

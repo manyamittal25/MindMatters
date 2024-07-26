@@ -14,6 +14,7 @@ import Dashboard from './components/Dashboard';
 import BlogList from './components/Blogs/BlogList';
 import BlogDetails from './components/Blogs/BlogDetails';
 import CreateBlog from './components/Blogs/CreateBlog';
+import GeneralTest from './components/SelfAssessment/GeneralTest';
 
 const AppContent = () => {
   const location = useLocation();
@@ -29,7 +30,7 @@ const AppContent = () => {
         <Route path="/self-assessment" element={<SelfAssess />} />
         <Route path="/meditation" element={<MeditationHelper />} />
         <Route path="/meditation-timer" element={<MeditationTimer />} />
-        <Route path="/depressiontest" element={<DepressionTest />} />
+        <Route path="/depressiontest" element={<GeneralTest />} />
         <Route path='/authCallback' element={<AuthCallback />} />
         <Route path='/dashboard' element={<Dashboard />} />
         <Route path="/blogs" element={<BlogList />} />
