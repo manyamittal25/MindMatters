@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { BACKEND_URL } from '../../urls';
 
 // Header Section with Background Image
 const Header = styled.div`
@@ -203,7 +204,7 @@ const BlogList = () => {
 
     useEffect(() => {
         const fetchBlogs = async () => {
-            const response = await fetch('/blogCat?param1=mental health');
+            const response = await fetch(`${BACKEND_URL}blogCat?param1=mental health`);
             const data = await response.json();
             setBlogs(data);
         };

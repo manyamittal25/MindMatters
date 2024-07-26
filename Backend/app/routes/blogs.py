@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request, redirect, url_for
+from flask_jwt_extended import jwt_required,get_jwt_identity
 import requests
 from datetime import datetime
 import pandas as pd
@@ -7,9 +8,10 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import os
 from .. import db
-from ..models.blog import Blog
+from ..models.blog import Blog,Likes
 from ..computeBlogs import computer
 import google.generativeai as genai
+from sqlalchemy import update,delete
 
 blog_bp = Blueprint('blog', __name__)
 
@@ -38,7 +40,8 @@ def getByCat():
             'upload_date': blog.upload_date,
             'summary':blog.summary,
             'author':blog.author,
-            'likes':blog.likes
+            'likes':blog.likes,
+            'imagelink':blog.imagelink
         } for blog in blogs_data
     ]
     
@@ -104,7 +107,8 @@ def get_most_related_articles(top_n=10):
             'id': blog.id,
             'title': blog.title,
             'author':blog.author,
-            'likes':blog.likes
+            'likes':blog.likes,
+            'imagelink':blog.imagelink
         } )
 
 
@@ -121,7 +125,8 @@ def getById():
             'upload_date': blog.upload_date,
             'summary':blog.summary,
             'author':blog.author,
-            'likes':blog.likes
+            'likes':blog.likes,
+            'imagelink':blog.imagelink
     }])
 
 @blog_bp.route('/createBlog',methods=['POST'])
@@ -149,8 +154,8 @@ def postBlog():
     new_blog_summary=getSummary(new_blog_content)
     new_blog_author=data.get('author')
     new_blog_title=data.get('title')
-
-    new_blog= Blog(content=new_blog_content,summary=new_blog_summary,author=new_blog_author,title=new_blog_title,upload_date=datetime.now().date())
+    new_blog_image=data.get('imageLink')
+    new_blog= Blog(content=new_blog_content,summary=new_blog_summary,imagelink=new_blog_image,author=new_blog_author,title=new_blog_title,upload_date=datetime.now().date())
     db.session.add(new_blog)
     db.session.commit()
     computer()
@@ -193,6 +198,66 @@ def postBlog():
 
 #     print("Updated cosine similarity matrix saved successfully.")
 
+@blog_bp.route('/hasLiked',methods=['GET'])
+@jwt_required
+def hasLiked():
+   blogId=request.args.get('id')
+   username=get_jwt_identity()
+   like_record=Likes.query.filter_by(blog_id=blogId,username=username).first()
+   if(like_record):
+      return True
+   else:
+      return False
+
+@blog_bp.route('/likedBlog',methods=['POST'])
+@jwt_required()
+def incrementLikes():
+    blogId=request.args.get('id')
+    username=get_jwt_identity()
+    blog=Blog.query.filter_by(id=blogId).first()
+    like_record=Likes.query.filter_by(blog_id=blogId,username=username).first()
+    
+    val=blog.likes
+    # hasLiked=False
+    if(like_record):
+      print("in already liked route")
+      
+      delete_query = delete(Likes).where(Likes.blog_id == blogId, Likes.username == username)
+      result = db.session.execute(delete_query)  # Assuming you have a db session
+      db.session.commit()
+      if(val):
+        
+        val=val-1
+      else:
+        val=0
+    else:
+      print("in not liked route")
+      new_like=Likes(username=username,blog_id=blogId)
+      db.session.add(new_like)
+    #   db.commit()  
+      if(val):
+        val=val+1
+      else:
+        val=1
+
+      
+    
+    new_values={'likes':val}
+    table = Blog.__table__
+    stmt = (
+        update(table)
+        .where(table.c.id == blogId)
+        .values(**new_values)
+    )
+
+    try:
+        
+        db.session.execute(stmt)
+        db.session.commit()
+        return jsonify("success")
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"message": "An error occurred", "error": str(e)}), 500
 
     
     
