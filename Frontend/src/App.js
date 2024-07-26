@@ -11,6 +11,9 @@ import DepressionTest from './components/SelfAssessment/DepressionTest';
 import AuthNavbar from './components/NavbarAuth';
 import AuthCallback from './components/AuthCallback';
 import Dashboard from './components/Dashboard';
+import BlogList from './components/Blogs/BlogList';
+import BlogDetails from './components/Blogs/BlogDetails';
+import CreateBlog from './components/Blogs/CreateBlog';
 
 const AppContent = () => {
   const location = useLocation();
@@ -29,7 +32,9 @@ const AppContent = () => {
         <Route path="/depressiontest" element={<DepressionTest />} />
         <Route path='/authCallback' element={<AuthCallback />} />
         <Route path='/dashboard' element={<Dashboard />} />
-
+        <Route path="/blogs" element={<BlogList />} />
+        <Route path="/blog/:id" element={<BlogDetails />} />
+        <Route path="/create-blog" element={<CreateBlog />} />
       </Routes>
     </>
   );

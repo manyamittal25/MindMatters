@@ -10,8 +10,8 @@ body {
     padding: 40px;
     min-height: 100vh;
     /* background: url('D:\MindMattersActual\Frontend\public\images\db.jpg'); */
-    background-image: url('D:\MindMattersActual\Frontend\public\images\db.jpg');
-    ;
+    /* background-image: url('/Frontend/public/images/db.jpg'); */
+    
     background-size: cover;
     background-position: center;
     position: relative;
