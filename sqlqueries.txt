@@ -15,3 +15,55 @@ CREATE TABLE quiz_anxiety (
     sometimes INT default 2,
     never INT default 1
 );
+
+CREATE TABLE IF NOT EXISTS public.blogs
+(
+    id integer NOT NULL DEFAULT nextval('blogs_id_seq'::regclass),
+    title character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    summary text COLLATE pg_catalog."default" NOT NULL,
+    content text COLLATE pg_catalog."default" NOT NULL,
+    author character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    upload_date date NOT NULL DEFAULT CURRENT_DATE,
+    likes integer DEFAULT 0,
+    imagelink character varying(500) COLLATE pg_catalog."default" DEFAULT 'https://res.cloudinary.com/dq5wsutfx/image/upload/v1721995273/cld-sample-4.jpg'::character varying,
+    CONSTRAINT blogs_pkey PRIMARY KEY (id)
+)
+
+
+CREATE TABLE IF NOT EXISTS public.likehistory
+(
+    username character varying(80) COLLATE pg_catalog."default" NOT NULL,
+    blog_id integer NOT NULL,
+    CONSTRAINT likehistory_pkey PRIMARY KEY (username, blog_id),
+    CONSTRAINT likehistory_blog_id_fkey FOREIGN KEY (blog_id)
+        REFERENCES public.blogs (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE,
+    CONSTRAINT likehistory_username_fkey FOREIGN KEY (username)
+        REFERENCES public.users (username) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+)
+
+CREATE TABLE IF NOT EXISTS public.users
+(
+    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    email character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    contact character varying(15) COLLATE pg_catalog."default",
+    diagnosis character(10) COLLATE pg_catalog."default" DEFAULT '0000000000'::bpchar,
+    username character varying(80) COLLATE pg_catalog."default" NOT NULL,
+    password character varying(120) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT users_username_pkey PRIMARY KEY (username),
+    CONSTRAINT users_email_key UNIQUE (email),
+    CONSTRAINT users_username_key UNIQUE (username)
+)
+
+CREATE TABLE test_history (
+    username VARCHAR(80) NOT NULL,
+    test_id INTEGER NOT NULL,
+    severity VARCHAR(500),
+    test_date DATE NOT NULL DEFAULT CURRENT_DATE,
+	responses JSONB,
+    PRIMARY KEY (username, test_id),
+    CONSTRAINT fk_username FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE
+);

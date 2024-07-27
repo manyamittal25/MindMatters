@@ -5,6 +5,29 @@ import { GrLike } from 'react-icons/gr';
 import { BACKEND_URL } from '../../urls';
 import axios from 'axios'
 // Blog Details Container
+// const BlogDetailsContainer = styled.div`
+//     padding: 40px 20px;
+//     font-family: Arial, sans-serif;
+//     background-color: #ffffff;
+//     color: #333;
+//     border-radius: 8px;
+//     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+//     margin-bottom: 30px;
+
+//     h2 {
+//         color: #007bff;
+//         margin-bottom: 10px;
+//     }
+
+//     p {
+//         margin-bottom: 20px;
+//     }
+
+//     h3, h4, h5 {
+//         margin: 10px 0;
+//     }
+// `;
+
 const BlogDetailsContainer = styled.div`
     padding: 40px 20px;
     font-family: Arial, sans-serif;
@@ -21,6 +44,7 @@ const BlogDetailsContainer = styled.div`
 
     p {
         margin-bottom: 20px;
+        white-space: pre-line; 
     }
 
     h3, h4, h5 {

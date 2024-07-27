@@ -35,7 +35,7 @@ const Dashboard = () => {
             <div className="section">
                 <h3><FaRegCheckCircle /> Tests Taken</h3>
                 <div className="cards">
-                    <div className="card">Test 1</div>
+                    <div className="card"></div>
                     <div className="card">Test 2</div>
                     <div className="card">Test 3</div>
                 </div>
@@ -54,14 +54,15 @@ const Dashboard = () => {
                 <button className="chat-button">Start Chat</button>
             </div>
 
-            <div className="section welcome-section">
+
+            {/* <div className="section welcome-section">
                 <h4><FaRegHeart /> There is hope, even when your brain tells you there isn’t!</h4>
                 <p>We are here to support you every step of the way. Take a moment to explore the resources available to you, and never hesitate to reach out if you need help.</p>
             </div>
 
             <footer className="footer">
                 <p>&copy; 2024 Mind Matters. All rights reserved.</p>
-            </footer>
+            </footer> */}
         </div>
     );
 };
