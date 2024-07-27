@@ -199,15 +199,15 @@ def postBlog():
 #     print("Updated cosine similarity matrix saved successfully.")
 
 @blog_bp.route('/hasLiked',methods=['GET'])
-@jwt_required
+@jwt_required()
 def hasLiked():
    blogId=request.args.get('id')
    username=get_jwt_identity()
    like_record=Likes.query.filter_by(blog_id=blogId,username=username).first()
    if(like_record):
-      return True
+      return jsonify(True)
    else:
-      return False
+      return jsonify(False)
 
 @blog_bp.route('/likedBlog',methods=['POST'])
 @jwt_required()

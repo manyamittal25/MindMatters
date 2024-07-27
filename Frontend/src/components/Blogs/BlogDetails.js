@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { GrLike } from 'react-icons/gr';
 import { BACKEND_URL } from '../../urls';
-
+import axios from 'axios'
 // Blog Details Container
 const BlogDetailsContainer = styled.div`
     padding: 40px 20px;
@@ -46,10 +46,10 @@ const LikeButton = styled.button`
         background-color: #0056b3;
     }
 
-    &:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-    }
+    // &:disabled {
+    //     background-color: #ccc;
+    //     // cursor: not-allowed;
+    // }
 `;
 
 // Related Blogs Section
@@ -131,6 +131,10 @@ const BlogDetails = () => {
     const [relatedBlogs, setRelatedBlogs] = useState([]);
     const [likes, setLikes] = useState(0);
     const [hasLiked, setHasLiked] = useState(false);
+    const [likeToggle, setLikeToggle] = useState(false)
+    const [loggedIn, setLoggedIn] = useState(false)
+
+
 
     useEffect(() => {
         const fetchBlog = async () => {
@@ -146,9 +150,28 @@ const BlogDetails = () => {
             setRelatedBlogs(data);
         };
 
+        const fetchLikeStatus = async () => {
+            const token = localStorage.getItem('jwtToken')
+            const response = await axios.get(`${BACKEND_URL}hasLiked?id=${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            const data = await response.data;
+            console.log(data)
+            setHasLiked(data)
+            // setLikes(data[0].likes);
+        };
+        const hasToken = !!localStorage.getItem('jwtToken');
+        console.log(hasToken)
+        if (hasToken) {
+            fetchLikeStatus();
+            setLoggedIn(true)
+        }
+
         fetchBlog();
         fetchRelatedBlogs();
-    }, [id]);
+    }, [id, likeToggle]);
 
     // useEffect(() => {
     //     const fetchLikeStatus = async () => {
@@ -169,21 +192,22 @@ const BlogDetails = () => {
     // }, [id]);
 
     const handleLike = async () => {
-        if (hasLiked) return;
+        // if (hasLiked) return;
 
-
-        const response = await fetch(`/likeBlog`, {
+        const token = localStorage.getItem('jwtToken')
+        const response = await fetch(`${BACKEND_URL}/likedBlog?id=${id}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ id })
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
         });
-
-        if (response.ok) {
-            setLikes(prevLikes => prevLikes + 1);
-            setHasLiked(true);
-        }
+        console.log(response)
+        // if (response.ok) {
+        //     setLikes(prevLikes => prevLikes + 1);
+        //     setHasLiked(true);
+        // }
+        likeToggle ? setLikeToggle(false) : setLikeToggle(true)
     };
 
     return (
@@ -197,10 +221,11 @@ const BlogDetails = () => {
                         <h3>Author: {blog.author}</h3>
                         <h4>Upload Date: {new Date(blog.upload_date).toLocaleDateString()}</h4>
                         <h5>Likes: {likes}</h5>
-                        <LikeButton onClick={handleLike} disabled={hasLiked}>
+                        {/* < LikeButton onClick={handleLike} disabled={hasLiked}> */}
+                        {loggedIn && (<LikeButton onClick={handleLike} >
                             <GrLike color={hasLiked ? '#ff0000' : '#ffffff'} />
                             {hasLiked ? 'Liked' : 'Like'}
-                        </LikeButton>
+                        </LikeButton>)}
                     </>
                 )}
             </BlogDetailsContainer>

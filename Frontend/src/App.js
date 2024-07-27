@@ -23,7 +23,8 @@ const AppContent = () => {
   return (
     <>
       <GlobalStyle />
-      {showNavbar ? <Navbar /> : <AuthNavbar />}
+      {/* {showNavbar ? <Navbar /> : <AuthNavbar />} */}
+      {showNavbar && <AuthNavbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/resources" element={<ResourcesPage />} />
