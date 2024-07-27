@@ -3,8 +3,9 @@ import styled from "styled-components";
 import axios from 'axios'
 import { useEffect } from "react";
 import { BACKEND_URL } from "../../urls";
+const token = localStorage.getItem('jwtToken');
 const getQuestions = async (topic) => {
-    const token = localStorage.getItem('jwtToken');
+
     const response = await axios.get(`${BACKEND_URL}test/?topic=${topic}`, {
         headers: {
             Authorization: `Bearer ${token}`,
@@ -195,11 +196,17 @@ function GeneralTest() {
     const [answers, setAnswers] = useState([]);
     const [score, setScore] = useState(0);
     const [quesData, setQuesData] = useState([])
-    const [topic, setTopic] = useState('depression')
+    const [topic, setTopic] = useState('anxiety')
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
     const [completionFlag, setCompletionFlag] = useState(false)
     const [currentOptScore, setCurrentOptScore] = useState(0)
+    const [responses, setResponses] = useState([])
+    const [current_opt_content, setCurrentOptContent] = useState('')
+    const [current_question_content, setCurrentQuesContent] = useState('')
+    const [currOptIndex, setCurrOptIndex] = useState(0)
+    const [resultString, setResultString] = useState('default result')
+    const [data, setData] = useState(null);
     useEffect(() => {
         const fetchQuestions = async (topic) => {
             try {
@@ -219,47 +226,125 @@ function GeneralTest() {
         fetchQuestions(topic);
     }, [topic]);
 
+    useEffect(() => {
+        if (quesData.length > 0) {
+            setCurrentQuesContent(quesData[currentQuestion].question);
+            setCurrentOptContent(transformedData[currentQuestion].options[currOptIndex].answer);
+        }
+    }, [currentQuestion, quesData]);
 
-    const handleOptionClick = (points) => {
+    useEffect(() => {
+        if (data) {
+            fetch(`${BACKEND_URL}test/addResult`, {
+                method: 'POST', // Specify the method
+                headers: {
+                    'Content-Type': 'application/json', // Set the content type to JSON
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(data) // Convert the data object to a JSON string
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        // Handle HTTP errors
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Parse the JSON response
+                })
+                .then(responseData => {
+                    // Handle the response data
+                    console.log('Success:', responseData);
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.error('Error:', error);
+                });
+        }
+    }, [data]);
+
+    const handleOptionClick = (curr_index, points, question_content, option_chosen) => {
         setCurrentOptScore(points)
+        setCurrentOptContent(option_chosen)
+        setCurrentQuesContent(question_content)
+        setCurrOptIndex(curr_index)
+
     };
 
     const handleNextClick = () => {
+        const newResponse = [...responses, {
+            question: current_question_content,
+            answer: current_opt_content
+        }];
+
+        setResponses(newResponse);
+
         if (currentQuestion === transformedData.length - 1) {
-            // let totalScore = answers.reduce((acc, cur) => acc + cur, 0);
-            setCompletionFlag(true)
-            let totalScore = score
-            console.log(totalScore)
-            let lim = transformedData.length * 4
-            const lim1 = lim / 5
-            const lim2 = lim1 * 2
-            const lim3 = lim1 * 3
-            const lim4 = lim1 * 4
+            setCompletionFlag(true);
 
+            const totalScore = score + currentOptScore;
+            console.log(totalScore);
+            console.log(newResponse);
 
+            let lim = transformedData.length * 4;
+            const lim1 = lim / 5;
+            const lim2 = lim1 * 2;
+            const lim3 = lim1 * 3;
+            const lim4 = lim1 * 4;
+            let result = 'default'
             if (totalScore >= transformedData.length && totalScore <= lim2) {
-                setScore("DISORDER FREE: No indication of mental health issues");
+                result = "DISORDER FREE: No indication of mental health issues";
             } else if (totalScore >= lim2 && totalScore <= lim3) {
-                setScore("ANXIETY: Mild indication of mental health issues");
+                result = " Mild indication of mental health issues";
             } else if (totalScore >= lim3 && totalScore <= lim4) {
-                setScore("Moderate indication of mental health issues");
+                result = "Moderate indication of mental health issues";
             } else {
-                setScore("DEPRESSION: Severe indication of mental health issues");
+                result = " Severe indication of mental health issues";
             }
-        } else {
-            const x = currentOptScore + score
-            console.log(`current score is: ${x}`)
-            setScore(x)
-            const newAnswers = [...answers];
-            newAnswers[currentQuestion] = currentOptScore;
 
+            const updated_data = {
+                'severity': result,
+                'topic': topic,
+                'responses': responses
+            }
+            setResultString(result)
+            setData(updated_data)
+
+            // fetch(`${BACKEND_URL}test/addResult`, {
+            //     method: 'POST', // Specify the method
+            //     headers: {
+            //         'Content-Type': 'application/json', // Set the content type to JSON
+            //         'Authorization': `Bearer ${token}`
+            //     },
+            //     body: JSON.stringify(data) // Convert the data object to a JSON string
+            // })
+            //     .then(response => {
+            //         if (!response.ok) {
+            //             // Handle HTTP errors
+            //             throw new Error('Network response was not ok');
+            //         }
+            //         return response.json(); // Parse the JSON response
+            //     })
+            //     .then(responseData => {
+            //         // Handle the response data
+            //         console.log('Success:', responseData);
+            //     })
+            //     .catch(error => {
+            //         // Handle errors
+            //         console.error('Error:', error);
+            //     });
+
+
+        } else {
+            const newScore = score + currentOptScore;
+            console.log(`current score is: ${newScore}`);
+            setScore(newScore);
+
+            const newAnswers = [...answers, currentOptScore];
             setAnswers(newAnswers);
 
-
             setCurrentQuestion(currentQuestion + 1);
-
         }
     };
+
 
     if (loading) {
         return (
@@ -281,10 +366,10 @@ function GeneralTest() {
 
     const transformedData = quesData.map(ques => ({
         question: ques.question,
-        options: [{ answer: 'Very often', points: ques.very_often },
-        { answer: 'Often', points: ques.often },
-        { answer: 'Sometimes', points: ques.sometimes },
-        { answer: 'Never', points: ques.never }
+        options: [{ answer: ques.opt_1, points: ques.pnt_1 },
+        { answer: ques.opt_2, points: ques.pnt_2 },
+        { answer: ques.opt_3, points: ques.pnt_3 },
+        { answer: ques.opt_4, points: ques.pnt_4 }
         ]
     }));
 
@@ -292,6 +377,7 @@ function GeneralTest() {
         <QuizContainer>
             <QuizBackground>
                 <Quiz>
+
                     <Question>{transformedData[currentQuestion].question}</Question>
                     {transformedData[currentQuestion].options.map((option, index) => (
                         <Row key={index}>
@@ -300,7 +386,7 @@ function GeneralTest() {
                                 id={`option${index}`}
                                 name="answer"
                                 value={option.points}
-                                onChange={() => handleOptionClick(option.points)}
+                                onChange={() => handleOptionClick(index, option.points, transformedData[currentQuestion].question, option.answer)}
                             />
                             <Option htmlFor={`option${index}`}>{option.answer}</Option>
                         </Row>
@@ -308,7 +394,7 @@ function GeneralTest() {
                     {completionFlag ? (
                         <div className="result">
                             <ResultHeading>Your result:</ResultHeading>
-                            <ResultParagraph>{score}</ResultParagraph>
+                            <ResultParagraph>{resultString}</ResultParagraph>
                         </div>
                     ) : (
                         <Button onClick={handleNextClick}>Next</Button>
