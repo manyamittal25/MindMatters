@@ -111,6 +111,8 @@ def get_most_related_articles(top_n=10):
             'imagelink':blog.imagelink
         } )
 
+    if data:  # Check if data is not empty
+     del data[0]
 
     return jsonify(data)
 
@@ -118,6 +120,7 @@ def get_most_related_articles(top_n=10):
 def getById():
     blogId=request.args.get('id')
     blog=Blog.query.filter_by(id=blogId).first()
+    print(blog.content)
     return jsonify([{
             'id': blog.id,
             'title': blog.title,

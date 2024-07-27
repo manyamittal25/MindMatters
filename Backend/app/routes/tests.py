@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request, redirect, url_for
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
-from ..models.test import Test2
+from ..models.test import Test2,Testhist
 from ..models.user import User
 from sqlalchemy import update,MetaData,Table,Column
 from sqlalchemy.orm import mapper
@@ -35,10 +35,14 @@ def get_test():
 
     test_data = [{
         'question': row.question,
-        'very_often': row.very_often,
-        'often': row.often,
-        'sometimes': row.sometimes,
-        'never': row.never
+        'opt_1': row.opt_1,
+        'opt_2': row.opt_2,
+        'opt_3': row.opt_3,
+        'opt_4': row.opt_4,
+        'pnt_1':row.pnt_1,
+        'pnt_2':row.pnt_2,
+        'pnt_3':row.pnt_3,
+        'pnt_4':row.pnt_4,
     } for row in results]
 
     return jsonify(test_data), 200
@@ -88,6 +92,46 @@ def getResult():
         return jsonify({"message": "An error occurred", "error": str(e)}), 500
 
     return jsonify({"message": "Record updated successfully"}), 200
+
+@test_bp.route('/addResult',methods=['POST'])
+@jwt_required()
+def updateResults():
+    username=get_jwt_identity()
+    # test_id=request.args.get('id')
+    
+    data = request.get_json()
+    print(data)
+    
+    topic = data.get('topic')
+    mapping={'anxiety': 0,
+     'adhd':1,'bipolar':2,
+     'autism':3,'depression':4,
+     'ocd':'5', 'ptsd':6,
+     'bulimia':7
+     }
+    test_id=mapping[topic]
+    record=Testhist.query.filter_by(username=username,test_id=test_id).first()
+    if(record):
+       db.session.delete(record)
+       db.session.commit()
+    
+    new_record = Testhist(
+        username=username,
+        test_id=test_id,
+        severity=data.get('severity'),
+        test_date= db.func.current_date(),
+        responses=data.get('responses')
+        )
+    
+    db.session.add(new_record)
+    db.session.commit()
+    return jsonify('result updated successfully'),200
+    
+# @test_bp.route('/getHelp',methods=['GET']) 
+# def getHelp():
+
+
+
 
 
     
