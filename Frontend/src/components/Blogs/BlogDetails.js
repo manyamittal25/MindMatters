@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { GrLike } from 'react-icons/gr';
 import { BACKEND_URL } from '../../urls';
 import axios from 'axios'
-// Blog Details Container
 const BlogDetailsContainer = styled.div`
     padding: 40px 20px;
     font-family: Arial, sans-serif;
@@ -21,12 +20,14 @@ const BlogDetailsContainer = styled.div`
 
     p {
         margin-bottom: 20px;
+        white-space: pre-line; 
     }
 
     h3, h4, h5 {
         margin: 10px 0;
     }
 `;
+
 
 // Like Button
 const LikeButton = styled.button`

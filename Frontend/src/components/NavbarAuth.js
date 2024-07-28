@@ -143,7 +143,8 @@ const AuthNavbar = () => {
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <NavLink to="/">Home</NavLink>
         <NavLink to="/about">About Us</NavLink>
-        <NavLink to="/services">Services</NavLink>
+        {/* <NavLink to="/services">Services</NavLink> */}
+        <NavLink to="/community">Community</NavLink>
         <NavLink to="/blogs">Resources</NavLink>
         <NavLink to="/self-assessment">Self Assessment</NavLink>
         <LoginButton to="/" onClick={handleLogin}> {authStatus}</LoginButton>

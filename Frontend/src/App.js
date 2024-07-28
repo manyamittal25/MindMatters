@@ -14,7 +14,9 @@ import Dashboard from './components/Dashboard';
 import BlogList from './components/Blogs/BlogList';
 import BlogDetails from './components/Blogs/BlogDetails';
 import CreateBlog from './components/Blogs/CreateBlog';
+import CommunityList from './components/Community/CommunityList';
 import Footer from './components/Footer';
+import DiscussionForum from './components/Community/DiscussionForum';
 
 const AppContent = () => {
   const location = useLocation();
@@ -37,6 +39,8 @@ const AppContent = () => {
         <Route path="/blogs" element={<BlogList />} />
         <Route path="/blog/:id" element={<BlogDetails />} />
         <Route path="/create-blog" element={<CreateBlog />} />
+        <Route path="/community" element={<CommunityList />} />
+        <Route path="/forum" element={<DiscussionForum />} />
       </Routes>
       <Footer />
     </>

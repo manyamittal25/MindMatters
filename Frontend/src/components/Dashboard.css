@@ -9,7 +9,7 @@ body {
 .dashboard {
     padding: 40px;
     min-height: 100vh;
-    background: url('D:\MindMattersActual\Frontend\public\images\db.jpg');
+    /* background: url('D:\MindMattersActual\Frontend\public\images\db.jpg'); */
     /* background-image: url('/Frontend/public/images/db.jpg'); */
 
     background-size: cover;
