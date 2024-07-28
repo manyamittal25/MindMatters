@@ -1,19 +1,14 @@
-CREATE TABLE quiz_adhd (
-    id SERIAL PRIMARY KEY,
-    question TEXT,
-    very_often INT default 4,
-    often INT default 3,
-    sometimes INT default 2,
-    never INT default 1
-);
-
-CREATE TABLE quiz_anxiety (
-    id SERIAL PRIMARY KEY,
-    question TEXT,
-    very_often INT default 4,
-    often INT default 3,
-    sometimes INT default 2,
-    never INT default 1
+CREATE TABLE IF NOT EXISTS public.users
+(
+    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    email character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    contact character varying(15) COLLATE pg_catalog."default",
+    diagnosis character(10) COLLATE pg_catalog."default" DEFAULT '0000000000'::bpchar,
+    username character varying(80) COLLATE pg_catalog."default" NOT NULL,
+    password character varying(120) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT users_username_pkey PRIMARY KEY (username),
+    CONSTRAINT users_email_key UNIQUE (email),
+    CONSTRAINT users_username_key UNIQUE (username)
 );
 
 CREATE TABLE IF NOT EXISTS public.blogs
@@ -27,8 +22,7 @@ CREATE TABLE IF NOT EXISTS public.blogs
     likes integer DEFAULT 0,
     imagelink character varying(500) COLLATE pg_catalog."default" DEFAULT 'https://res.cloudinary.com/dq5wsutfx/image/upload/v1721995273/cld-sample-4.jpg'::character varying,
     CONSTRAINT blogs_pkey PRIMARY KEY (id)
-)
-
+);
 
 CREATE TABLE IF NOT EXISTS public.likehistory
 (
@@ -43,27 +37,50 @@ CREATE TABLE IF NOT EXISTS public.likehistory
         REFERENCES public.users (username) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE CASCADE
-)
-
-CREATE TABLE IF NOT EXISTS public.users
-(
-    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    email character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    contact character varying(15) COLLATE pg_catalog."default",
-    diagnosis character(10) COLLATE pg_catalog."default" DEFAULT '0000000000'::bpchar,
-    username character varying(80) COLLATE pg_catalog."default" NOT NULL,
-    password character varying(120) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT users_username_pkey PRIMARY KEY (username),
-    CONSTRAINT users_email_key UNIQUE (email),
-    CONSTRAINT users_username_key UNIQUE (username)
-)
-
-CREATE TABLE test_history (
-    username VARCHAR(80) NOT NULL,
-    test_id INTEGER NOT NULL,
-    severity VARCHAR(500),
-    test_date DATE NOT NULL DEFAULT CURRENT_DATE,
-	responses JSONB,
-    PRIMARY KEY (username, test_id),
-    CONSTRAINT fk_username FOREIGN KEY (username) REFERENCES users(username) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS public.quiz_anxiety
+(
+    id integer NOT NULL DEFAULT nextval('quiz_anxiety_id_seq'::regclass),
+    question text COLLATE pg_catalog."default",
+    pnt_4 integer DEFAULT 4,
+    pnt_3 integer DEFAULT 3,
+    pnt_2 integer DEFAULT 2,
+    pnt_1 integer DEFAULT 1,
+    opt_1 text COLLATE pg_catalog."default" DEFAULT 'never'::text,
+    opt_2 text COLLATE pg_catalog."default" DEFAULT 'sometimes'::text,
+    opt_3 text COLLATE pg_catalog."default" DEFAULT 'often'::text,
+    opt_4 text COLLATE pg_catalog."default" DEFAULT 'very often'::text,
+    CONSTRAINT quiz_anxiety_pkey PRIMARY KEY (id)
+);
+
+INSERT INTO quiz_anxiety (question)
+VALUES
+    ('I find it very hard to unwind, relax or sit still'),
+    ('I have had stomach problems, such as feeling sick or stomach cramps'),
+    ('I have been irritable and easily become annoyed'),
+    ('I have experienced shortness of breath'),
+    ('I have felt dizzy and unsteady at times'),
+    ('I have had difficulties with sleep (including waking early, finding it hard to go to sleep)'),
+    ('I have felt panicked and overwhelmed by things in my life'),
+    ('I have felt nervous and on edge'),
+    ('I have had trembling hands'),
+    ('I seem to be constantly worrying about things')
+    ;
+
+
+
+CREATE TABLE IF NOT EXISTS public.test_history
+(
+    username character varying(80) COLLATE pg_catalog."default" NOT NULL,
+    test_id integer NOT NULL,
+    severity character varying(500) COLLATE pg_catalog."default",
+    test_date date NOT NULL DEFAULT CURRENT_DATE,
+    responses jsonb,
+    CONSTRAINT test_history_pkey PRIMARY KEY (username, test_id),
+    CONSTRAINT fk_username FOREIGN KEY (username)
+        REFERENCES public.users (username) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+);
+
