@@ -256,7 +256,7 @@ const CommunityList = () => {
                                 <p>Description of the community. This is where you can explain what the community is about and why it might be a good fit for the user.</p>
                             </div>
                         </div>
-                        <Link to="/forum" className="join-button">Join Now</Link>
+                        <Link to="/forum/depression" className="join-button">Join Now</Link>
                     </div>
                     <div className="community-item">
                         <div className="community-name">Mindfulness</div>
@@ -266,7 +266,7 @@ const CommunityList = () => {
                                 <p>Description of the community. This is where you can explain what the community is about and why it might be a good fit for the user.</p>
                             </div>
                         </div>
-                        <Link to="/forum" className="join-button">Join Now</Link>
+                        <Link to="/forum/mindfulness" className="join-button">Join Now</Link>
                     </div>
 
                     <div className="community-item">
@@ -277,7 +277,7 @@ const CommunityList = () => {
                                 <p>Description of the community. This is where you can explain what the community is about and why it might be a good fit for the user.</p>
                             </div>
                         </div>
-                        <Link to="/forum" className="join-button">Join Now</Link>
+                        <Link to="/forum/sleep" className="join-button">Join Now</Link>
                     </div>
                 </CommunityListContainer>
             </JoinCommunities>
