@@ -33,7 +33,7 @@ const AppContent = () => {
         <Route path="/self-assessment" element={<SelfAssess />} />
         <Route path="/meditation" element={<MeditationHelper />} />
         <Route path="/meditation-timer" element={<MeditationTimer />} />
-        <Route path="/depressiontest" element={<GeneralTest />} />
+        <Route path="/test/:topic" element={<GeneralTest />} />
         <Route path="/authCallback" element={<AuthCallback />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/blogs" element={<BlogList />} />

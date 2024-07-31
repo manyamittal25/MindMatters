@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from 'axios'
 import { useEffect } from "react";
 import { BACKEND_URL } from "../../urls";
+import { useNavigate, useParams } from "react-router-dom";
 const token = localStorage.getItem('jwtToken');
 const getQuestions = async (topic) => {
 
@@ -196,7 +197,7 @@ function GeneralTest() {
     const [answers, setAnswers] = useState([]);
     const [score, setScore] = useState(0);
     const [quesData, setQuesData] = useState([])
-    const [topic, setTopic] = useState('anxiety')
+    // const [topic, setTopic] = useState('')
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(true);
     const [completionFlag, setCompletionFlag] = useState(false)
@@ -207,7 +208,13 @@ function GeneralTest() {
     const [currOptIndex, setCurrOptIndex] = useState(0)
     const [resultString, setResultString] = useState('default result')
     const [data, setData] = useState(null);
+    const [position1, setPosition1] = useState({
+        latitude: null,
+        longitude: null,
+    });
+    const { topic } = useParams()
     useEffect(() => {
+
         const fetchQuestions = async (topic) => {
             try {
                 const quest = await getQuestions(topic);
@@ -224,7 +231,7 @@ function GeneralTest() {
         };
 
         fetchQuestions(topic);
-    }, [topic]);
+    }, []);
 
     useEffect(() => {
         if (quesData.length > 0) {
@@ -232,6 +239,22 @@ function GeneralTest() {
             setCurrentOptContent(transformedData[currentQuestion].options[currOptIndex].answer);
         }
     }, [currentQuestion, quesData]);
+
+    useEffect(() => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function (position) {
+                setPosition1({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                });
+            });
+        } else {
+            console.log("Geolocation is not available in your browser.");
+        }
+    }, []);
+
+    console.log("Location is :", position1);
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (data) {
