@@ -40,7 +40,7 @@ const AppContent = () => {
         <Route path="/blog/:id" element={<BlogDetails />} />
         <Route path="/create-blog" element={<CreateBlog />} />
         <Route path="/community" element={<CommunityList />} />
-        <Route path="/forum" element={<DiscussionForum />} />
+        <Route path="/forum/:comm" element={<DiscussionForum />} />
       </Routes>
       <Footer />
     </>

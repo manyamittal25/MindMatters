@@ -1,7 +1,10 @@
 // components/DiscussionForum.js
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-
+import { BACKEND_URL } from '../../urls';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 // Container for the entire forum page
 const ForumContainer = styled.div`
     background-color: #f0f8e2; /* Light lime yellow color */
@@ -162,37 +165,163 @@ const DiscussionForum = () => {
     const [newPostTitle, setNewPostTitle] = useState(''); // State for new post title
     const [newPostContent, setNewPostContent] = useState(''); // State for new post content
     const [selectedPostId, setSelectedPostId] = useState(null); // State to manage selected post for commenting
+    const [loggedIn, setLoggedIn] = useState(false)
+    const [changeFlag, setChangeFlag] = useState(true)
+    const token = localStorage.getItem('jwtToken')
+    const [currentUser, setCurrentUser] = useState("")
 
+
+    const { comm } = useParams();
+    console.log(`user is:${comm}`)
     // Fetch posts from the backend (mocked here)
+    //     useEffect(() => {
+    //         // Replace this with your actual fetch request
+
+    //         const fetchPosts = async () => {
+
+
+    //             // Example data, replace with real fetch call
+
+
+    //             // const data = [
+    //             //     {
+    //             //         id: 1,
+    //             //         author: 'Jane Doe',
+    //             //         content: 'This is an example of a post content. Share your thoughts and experiences here.',
+    //             //         comments: [
+    //             //             { author: 'John Smith', content: 'Great post!' },
+    //             //             { author: 'Alice Brown', content: 'I totally agree with you.' }
+    //             //         ]
+    //             //     },
+    //             //     {
+    //             //         id: 2,
+    //             //         author: 'Jane Doe',
+    //             //         content: 'This is another example of a post content. Share your thoughts and experiences here.',
+    //             //         comments: [
+    //             //             { author: 'John Smith', content: 'Great post!' },
+    //             //             { author: 'Alice Brown', content: 'I totally agree with you.' }
+    //             //         ]
+    //             //     }
+    //             // ];
+
+    //        useEffect(() => {
+    //   const fetchPosts = async () => {
+    //     try {
+    //       const response = await fetch(`${BACKEND_URL}comm/getPosts?${comm}`);
+    //       if (!response.ok) {
+    //         throw new Error('Network response was not ok');
+    //       }
+    //       const data = await response.json();
+    //       setPosts(data);
+    //     } catch (error) {
+    //       console.error('Error:', error);
+    //     }
+    //   };
+
+    //   fetchPosts();   
+
+    // }, [comm]);
+
+    //             setPosts(data);
+    //         };
+
+    //         fetchPosts();
+    //     }, []);
+
     useEffect(() => {
-        // Replace this with your actual fetch request
         const fetchPosts = async () => {
-            // Example data, replace with real fetch call
-            const data = [
-                {
-                    id: 1,
-                    author: 'Jane Doe',
-                    content: 'This is an example of a post content. Share your thoughts and experiences here.',
-                    comments: [
-                        { author: 'John Smith', content: 'Great post!' },
-                        { author: 'Alice Brown', content: 'I totally agree with you.' }
-                    ]
-                },
-                {
-                    id: 2,
-                    author: 'Jane Doe',
-                    content: 'This is another example of a post content. Share your thoughts and experiences here.',
-                    comments: [
-                        { author: 'John Smith', content: 'Great post!' },
-                        { author: 'Alice Brown', content: 'I totally agree with you.' }
-                    ]
+            try {
+                const response = await fetch(`${BACKEND_URL}comm/getPosts?comm=${comm}`);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-            ];
-            setPosts(data);
+                const data = await response.json();
+                setPosts(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        const getUsername = async () => {
+            try {
+                const response = await fetch(`${BACKEND_URL}auth/getUser`, {
+                    method: 'GET', // Specify the method
+                    headers: {
+                        'Content-Type': 'application/json', // Set the content type to JSON
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                // console.log(data)
+                setCurrentUser(data.username);
+            } catch (error) {
+                console.error('Error:', error);
+            }
         };
 
         fetchPosts();
-    }, []);
+        if (token) {
+            setLoggedIn(true);
+            getUsername();
+        }
+
+    }, [comm, changeFlag]);
+
+    const handleDeleteComment = async (id, content) => {
+        console.log(content)
+        try {
+            const response = await fetch(`${BACKEND_URL}comm/deleteComment?comm=${comm}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id: id,
+                    content: content
+                })
+            });
+
+            if (!response.ok) {
+                throw new
+                    Error('Failed to delete post');
+            }
+
+            const data = await response.json();
+            console.log(data); // Handle success response
+            changeFlag ? setChangeFlag(false) : setChangeFlag(true)
+        } catch (error) {
+            console.error(error); // Handle error
+        }
+    }
+
+    const handleDeletePost = async (id) => {
+        try {
+            const response = await fetch(`${BACKEND_URL}comm/deletePost?comm=${comm}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: id })
+            });
+
+            if (!response.ok) {
+                throw new
+                    Error('Failed to delete post');
+            }
+
+            const data = await response.json();
+            console.log(data); // Handle success response
+            changeFlag ? setChangeFlag(false) : setChangeFlag(true)
+        } catch (error) {
+            console.error(error); // Handle error
+        }
+    }
 
     // Handle comment input change
     const handleCommentChange = (e) => {
@@ -208,9 +337,9 @@ const DiscussionForum = () => {
                 prevPosts.map((post) =>
                     post.id === selectedPostId
                         ? {
-                              ...post,
-                              comments: [...post.comments, { author: 'Anonymous', content: newComment }]
-                          }
+                            ...post,
+                            comments: [...post.comments, { author: 'Anonymous', content: newComment }]
+                        }
                         : post
                 )
             );
@@ -218,6 +347,45 @@ const DiscussionForum = () => {
         }
     };
 
+    const handleCommentSubmit2 = (e) => {
+        e.preventDefault();
+        console.log("comment submit triggered")
+        if (selectedPostId !== null) {
+            // Add new comment to the selected post (mocked here)
+            const data = {
+                id: selectedPostId,
+                content: newComment
+            }
+            console.log(data)
+            fetch(`${BACKEND_URL}comm/comment?comm=${comm}`, {
+                method: 'POST', // Specify the method
+                headers: {
+                    'Content-Type': 'application/json', // Set the content type to JSON
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(data) // Convert the data object to a JSON string
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        // Handle HTTP errors
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Parse the JSON response
+                })
+                .then(responseData => {
+                    // Handle the response data
+                    console.log('Success:', responseData);
+                    changeFlag ? setChangeFlag(false) : setChangeFlag(true)
+
+                    setNewComment('');
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.error('Error:', error);
+                });
+
+        }
+    };
     // Handle new post form submission
     const handlePostSubmit = (e) => {
         e.preventDefault();
@@ -237,18 +405,60 @@ const DiscussionForum = () => {
         }
     };
 
+    const handlePostSubmit2 = (e) => {
+        console.log("post submit triggered")
+        e.preventDefault();
+        if (newPostContent) {
+            // Add new post (mocked here)
+            const data = {
+                id: posts.length + 1,
+                content: newPostContent
+            }
+            fetch(`${BACKEND_URL}comm/addPost?comm=${comm}`, {
+                method: 'POST', // Specify the method
+                headers: {
+                    'Content-Type': 'application/json', // Set the content type to JSON
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(data) // Convert the data object to a JSON string
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        // Handle HTTP errors
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json(); // Parse the JSON response
+                })
+                .then(responseData => {
+                    // Handle the response data
+                    console.log('Success:', responseData);
+                    changeFlag ? setChangeFlag(false) : setChangeFlag(true)
+
+                    setNewPostContent('');
+                })
+                .catch(error => {
+                    // Handle errors
+                    console.error('Error:', error);
+                });
+
+
+        }
+    };
+
+    console.log(currentUser)
+
     return (
         <ForumContainer>
             {/* Create Post Section */}
-            <CreatePostContainer>
+            {loggedIn && (<CreatePostContainer>
                 <CreatePostHeader>Create Your Own Post</CreatePostHeader>
-                <CreatePostForm onSubmit={handlePostSubmit}>
-                    <PostTitleInput
+                <CreatePostForm onSubmit={handlePostSubmit2}>
+                    {/* <PostTitleInput
                         type="text"
                         value={newPostTitle}
                         onChange={(e) => setNewPostTitle(e.target.value)}
                         placeholder="Post Title"
-                    />
+                    /> */}
                     <PostContentInput
                         value={newPostContent}
                         onChange={(e) => setNewPostContent(e.target.value)}
@@ -257,24 +467,29 @@ const DiscussionForum = () => {
                     />
                     <SubmitButton type="submit">Submit Post</SubmitButton>
                 </CreatePostForm>
-            </CreatePostContainer>
+            </CreatePostContainer>)}
 
             {/* Forum Posts Section */}
             <ForumContentContainer>
                 <ForumHeader>Discussion Forum</ForumHeader>
                 {posts.map((post) => (
                     <PostContainer key={post.id}>
-                        <PostAuthor>{post.author}</PostAuthor>
-                        <PostContent>{post.content}</PostContent>
+                        <PostAuthor>{post.username}</PostAuthor>
+                        <PostContent>{post.contents}</PostContent>
                         <CommentsContainer>
                             {post.comments.map((comment, index) => (
                                 <Comment key={index}>
                                     <CommentAuthor>{comment.author}</CommentAuthor>
                                     <CommentContent>{comment.content}</CommentContent>
+                                    {comment.author === currentUser && <FontAwesomeIcon
+                                        icon={faTrashAlt}
+                                        onClick={() => handleDeleteComment(post.id, comment.content)}
+                                        style={{ cursor: 'pointer', color: '#e74c3c' }}
+                                    />}
                                 </Comment>
                             ))}
-                            {selectedPostId === post.id && (
-                                <CommentForm onSubmit={handleCommentSubmit}>
+                            {loggedIn && selectedPostId === post.id && (
+                                <CommentForm onSubmit={handleCommentSubmit2}>
                                     <CommentInput
                                         value={newComment}
                                         onChange={handleCommentChange}
@@ -284,10 +499,15 @@ const DiscussionForum = () => {
                                     <SubmitButton type="submit">Submit Comment</SubmitButton>
                                 </CommentForm>
                             )}
-                            <SubmitButton onClick={() => setSelectedPostId(selectedPostId === post.id ? null : post.id)}>
+                            {loggedIn && (<SubmitButton onClick={() => setSelectedPostId(selectedPostId === post.id ? null : post.id)}>
                                 {selectedPostId === post.id ? 'Hide Comment Form' : 'Add Comment'}
-                            </SubmitButton>
+                            </SubmitButton>)}
                         </CommentsContainer>
+                        {loggedIn && post.username == currentUser && (<FontAwesomeIcon
+                            icon={faTrashAlt}
+                            onClick={() => handleDeletePost(post.id)}
+                            style={{ cursor: 'pointer', color: '#e74c3c' }}
+                        />)}
                     </PostContainer>
                 ))}
             </ForumContentContainer>

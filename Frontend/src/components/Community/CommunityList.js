@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 // Container for the entire page with background color
 const PageContainer = styled.div`
@@ -225,63 +225,63 @@ const CommunityList = () => {
                     </div>
                     <div className="image-container"></div>
                 </Header>
-                </PageContainer>
-                <CommunityOffers>
-                    <ImageContainer />
-                    <TextContainer>
-                        <h2>What Our Community Offers</h2>
-                        <p><strong>Not Your Average Support Network.</strong> We’re done with the conventional support groups that feel distant and impersonal. Imagine a space where you can connect with others who truly understand your struggles. Whether you’re looking to join different community groups, share your experiences, or engage with posts from others, our platform offers a space where support feels authentic and personal. Yes, mental health support can be engaging and interactive!</p>
-                        <p><strong>Your Journey, Your Space.</strong> We believe that your mental health journey is uniquely yours. That’s why we provide a flexible platform where you can explore various community groups, post your own updates, and comment on others' experiences. Our goal is to make it easy for you to find the groups and conversations that resonate with your personal journey and provide the support you need.</p>
-                        <p><strong>The Connection Promise.</strong> In our community, we strive to foster genuine connections and meaningful interactions. By joining, you become part of a supportive network dedicated to understanding and empathy. Whether you need someone to talk to or a place to share your thoughts, our platform ensures that your voice is heard and valued.</p>
-                    </TextContainer>
-                </CommunityOffers>
-                <JoinCommunities>
-                    <h2>Join Our Communities</h2>
-                    <CommunityListContainer>
-                        <div className="community-item">
-                            <div className="community-name">Anxiety</div>
-                            <div className="community-details">
-                                <div className="community-image" style={{ backgroundImage: 'url(/images/support.png)' }}></div>
-                                <div className="community-description">
-                                    <p>Description of the community. This is where you can explain what the community is about and why it might be a good fit for the user.</p>
-                                </div>
+            </PageContainer>
+            <CommunityOffers>
+                <ImageContainer />
+                <TextContainer>
+                    <h2>What Our Community Offers</h2>
+                    <p><strong>Not Your Average Support Network.</strong> We’re done with the conventional support groups that feel distant and impersonal. Imagine a space where you can connect with others who truly understand your struggles. Whether you’re looking to join different community groups, share your experiences, or engage with posts from others, our platform offers a space where support feels authentic and personal. Yes, mental health support can be engaging and interactive!</p>
+                    <p><strong>Your Journey, Your Space.</strong> We believe that your mental health journey is uniquely yours. That’s why we provide a flexible platform where you can explore various community groups, post your own updates, and comment on others' experiences. Our goal is to make it easy for you to find the groups and conversations that resonate with your personal journey and provide the support you need.</p>
+                    <p><strong>The Connection Promise.</strong> In our community, we strive to foster genuine connections and meaningful interactions. By joining, you become part of a supportive network dedicated to understanding and empathy. Whether you need someone to talk to or a place to share your thoughts, our platform ensures that your voice is heard and valued.</p>
+                </TextContainer>
+            </CommunityOffers>
+            <JoinCommunities>
+                <h2>Join Our Communities</h2>
+                <CommunityListContainer>
+                    <div className="community-item">
+                        <div className="community-name">Anxiety</div>
+                        <div className="community-details">
+                            <div className="community-image" style={{ backgroundImage: 'url(/images/support.png)' }}></div>
+                            <div className="community-description">
+                                <p>Description of the community. This is where you can explain what the community is about and why it might be a good fit for the user.</p>
                             </div>
-                            <Link to="/forum" className="join-button">Join Now</Link>
                         </div>
-                        <div className="community-item">
-                            <div className="community-name">Depression</div>
-                            <div className="community-details">
-                                <div className="community-image" style={{ backgroundImage:  'url(/images/support.png)' }}></div>
-                                <div className="community-description">
-                                    <p>Description of the community. This is where you can explain what the community is about and why it might be a good fit for the user.</p>
-                                </div>
+                        <Link to="/forum/anxiety" className="join-button">Join Now</Link>
+                    </div>
+                    <div className="community-item">
+                        <div className="community-name">Depression</div>
+                        <div className="community-details">
+                            <div className="community-image" style={{ backgroundImage: 'url(/images/support.png)' }}></div>
+                            <div className="community-description">
+                                <p>Description of the community. This is where you can explain what the community is about and why it might be a good fit for the user.</p>
                             </div>
-                            <Link to="/forum" className="join-button">Join Now</Link>
                         </div>
-                        <div className="community-item">
-                            <div className="community-name">Mindfulness</div>
-                            <div className="community-details">
-                                <div className="community-image" style={{ backgroundImage:  'url(/images/support.png)'}}></div>
-                                <div className="community-description">
-                                    <p>Description of the community. This is where you can explain what the community is about and why it might be a good fit for the user.</p>
-                                </div>
+                        <Link to="/forum" className="join-button">Join Now</Link>
+                    </div>
+                    <div className="community-item">
+                        <div className="community-name">Mindfulness</div>
+                        <div className="community-details">
+                            <div className="community-image" style={{ backgroundImage: 'url(/images/support.png)' }}></div>
+                            <div className="community-description">
+                                <p>Description of the community. This is where you can explain what the community is about and why it might be a good fit for the user.</p>
                             </div>
-                            <Link to="/forum" className="join-button">Join Now</Link>
                         </div>
+                        <Link to="/forum" className="join-button">Join Now</Link>
+                    </div>
 
-                        <div className="community-item">
-                            <div className="community-name">Sleep</div>
-                            <div className="community-details">
-                                <div className="community-image" style={{ backgroundImage:  'url(/images/support.png)' }}></div>
-                                <div className="community-description">
-                                    <p>Description of the community. This is where you can explain what the community is about and why it might be a good fit for the user.</p>
-                                </div>
+                    <div className="community-item">
+                        <div className="community-name">Sleep</div>
+                        <div className="community-details">
+                            <div className="community-image" style={{ backgroundImage: 'url(/images/support.png)' }}></div>
+                            <div className="community-description">
+                                <p>Description of the community. This is where you can explain what the community is about and why it might be a good fit for the user.</p>
                             </div>
-                            <Link to="/forum" className="join-button">Join Now</Link>
                         </div>
-                    </CommunityListContainer>
-                </JoinCommunities>
-            
+                        <Link to="/forum" className="join-button">Join Now</Link>
+                    </div>
+                </CommunityListContainer>
+            </JoinCommunities>
+
         </>
     );
 };

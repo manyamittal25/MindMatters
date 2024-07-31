@@ -44,11 +44,12 @@ def create_app(config_class=Config):
     from .routes.api import api_bp
     from .routes.blogs import blog_bp
     from .routes.tests import test_bp
+    from .routes.posts import post_bp
     app.register_blueprint(auth_bp,url_prefix='/auth')
     app.register_blueprint(api_bp, url_prefix='/api')
     app.register_blueprint(blog_bp)
     app.register_blueprint(test_bp,url_prefix='/test')
-
+    app.register_blueprint(post_bp,url_prefix='/comm')
     # @app.before_request
     # def handle_options_request():
     #     if request.method == 'OPTIONS':
