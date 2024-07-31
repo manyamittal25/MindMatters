@@ -71,12 +71,12 @@ function SelfAssess() {
         <HeaderText>Mental health conditions, such as depression or anxiety, are real, common and treatable. And recovery is possible.</HeaderText>
       </Header>
       <TestButtons>
-        <TestButton onClick={() => handleButtonClick('/depressiontest')}>DEPRESSION TEST</TestButton>
-        <TestButton onClick={() => handleButtonClick('/postpartumtest')}>POSTPARTUM DEPRESSION TEST (NEW & EXPECTING PARENTS)</TestButton>
-        <TestButton onClick={() => handleButtonClick('/anxietytest')}>ANXIETY TEST</TestButton>
-        <TestButton onClick={() => handleButtonClick('/adhdtest')}>ADHD TEST</TestButton>
-        <TestButton onClick={() => handleButtonClick('/bipolartest')}>BIPOLAR TEST</TestButton>
-        <TestButton onClick={() => handleButtonClick('/psychosisstest')}>PSYCHOSIS & SCHIZOPHRENIA TEST</TestButton>
+        <TestButton onClick={() => handleButtonClick('/test/depression')}>DEPRESSION TEST</TestButton>
+        <TestButton onClick={() => handleButtonClick('/test/postpartum')}>POSTPARTUM DEPRESSION TEST (NEW & EXPECTING PARENTS)</TestButton>
+        <TestButton onClick={() => handleButtonClick('/test/anxiety')}>ANXIETY TEST</TestButton>
+        <TestButton onClick={() => handleButtonClick('/test/adhd')}>ADHD TEST</TestButton>
+        <TestButton onClick={() => handleButtonClick('/test/bipolar')}>BIPOLAR TEST</TestButton>
+        <TestButton onClick={() => handleButtonClick('/test/psychosis')}>PSYCHOSIS & SCHIZOPHRENIA TEST</TestButton>
       </TestButtons>
     </Container>
   );

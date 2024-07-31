@@ -84,3 +84,17 @@ CREATE TABLE IF NOT EXISTS public.test_history
         ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS public.post_anxiety
+(
+    id integer NOT NULL DEFAULT nextval('post_anxiety_id_seq'::regclass),
+    contents text COLLATE pg_catalog."default",
+    username character varying(80) COLLATE pg_catalog."default",
+    comments jsonb,
+    CONSTRAINT post_anxiety_pkey PRIMARY KEY (id),
+    CONSTRAINT post_anxiety_username_fkey FOREIGN KEY (username)
+        REFERENCES public.users (username) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE CASCADE
+);
+
+
