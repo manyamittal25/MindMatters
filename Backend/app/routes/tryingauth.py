@@ -74,7 +74,7 @@ def getUserInfo():
     current_user = get_jwt_identity()
     user = User.query.filter_by(username=current_user).first()
     data={
-        'email':user.email,
+        'username':user.username,
         'name':user.name,
         'diagnosis': user.diagnosis,
 
