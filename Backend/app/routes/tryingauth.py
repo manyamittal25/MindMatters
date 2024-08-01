@@ -41,9 +41,16 @@ def google_authorized():
     access_token = response['access_token']
     headers = {'Authorization': f'Bearer {access_token}'}
     r = requests.get('https://www.googleapis.com/oauth2/v1/userinfo', headers=headers)
+    
+    if r.status_code != 200:
+        return jsonify(message="Failed to fetch user info"), 500
+
     user_info = r.json()
-    username = user_info['email']
-    name = user_info['name']
+    username = user_info.get('email')
+    name = user_info.get('name')
+
+    if not username:
+        return jsonify(message="User email not found"), 400
 
     user = User.query.filter_by(username=username).first()
 
@@ -53,9 +60,11 @@ def google_authorized():
         db.session.commit()
 
     jwt_token = create_access_token(identity=username)
-    print(jwt_token)
-    redirect_url=os.environ.get('FRONTEND_URL')
-    return redirect(f'{redirect_url}authCallback?access_token={jwt_token}')
+    print(f"Generated JWT Token: {jwt_token}")
+    
+    # Ensure the redirect URL includes the access token and username
+    redirect_url = os.environ.get('FRONTEND_URL', 'http://localhost:3000/')  # Default to localhost if not set
+    return redirect(f'{redirect_url}authCallback?access_token={jwt_token}&userName={name}')
 
 @google.tokengetter
 def get_google_oauth_token():
@@ -67,18 +76,18 @@ def protected():
     current_user = get_jwt_identity()
     return jsonify(logged_in_as=current_user), 200
 
-@auth_bp.route('/getUser',methods=['GET'])
+@auth_bp.route('/getUser', methods=['GET'])
 @jwt_required()
 def getUserInfo():
-    
     current_user = get_jwt_identity()
     user = User.query.filter_by(username=current_user).first()
-    data={
-        'username':user.username,
-        'name':user.name,
-        'diagnosis': user.diagnosis,
+    
+    if not user:
+        return jsonify(message="User not found"), 404
 
-
-
+    data = {
+        'username': user.username,
+        'name': user.name,
+        'diagnosis': user.diagnosis
     }
     return jsonify(data)

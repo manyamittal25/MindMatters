@@ -25,7 +25,6 @@ const AppContent = () => {
   return (
     <>
       <GlobalStyle />
-      {/* {showNavbar ? <Navbar /> : <AuthNavbar />} */}
       {showNavbar && <AuthNavbar />}
       <Routes>
         <Route path="/" element={<Home />} />

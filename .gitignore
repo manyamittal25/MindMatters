@@ -12,6 +12,7 @@ Frontend/coverage
 Frontend/build
 
 # misc
+venv
 Frontend/.DS_Store
 Frontend/.env.local
 Frontend/.env.development.local

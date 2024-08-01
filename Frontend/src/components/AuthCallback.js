@@ -7,17 +7,19 @@ const AuthCallback = () => {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search);
         const token = params.get('access_token');
+        const userName = params.get('userName');
 
-        if (token) {
-            // Store the token in localStorage or a state management library
+        if (token && userName) {
+            // Store the token and userName in localStorage
             localStorage.setItem('jwtToken', token);
+            localStorage.setItem('userName', userName);
 
-            // Redirect to a specific page (e.g., dashboard, home, or protected route)
-            navigate('/'); // Change '/protected' to the route you want to redirect to
+            // Redirect to home or any other page
+            navigate('/');
         } else {
             // Handle the case where no token is returned
-            console.error('No access token found');
-            navigate('/'); // Redirect to home or another fallback route
+            console.error('No access token or userName found');
+            navigate('/');
         }
     }, [navigate]);
 

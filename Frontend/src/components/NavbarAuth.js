@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
-import { useState } from 'react';
-import { useEffect } from 'react';
+
 // Keyframes for zoom animation
 const zoom = keyframes`
   0%, 100% {
@@ -65,7 +64,7 @@ const NavLink = styled(Link)`
   }
 `;
 
-// Special styling for the "Login" button
+// Special styling for the "Login" button and profile initials
 const StyledLink = styled(Link)`
   background: #fff;
   color: #4a4a4a;
@@ -82,7 +81,20 @@ const StyledLink = styled(Link)`
   }
 `;
 
-
+const Profile = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 15px;
+  text-align: center;
+`;
 
 // Styling for the "MindMatters" text
 const Logo = styled.div`
@@ -93,61 +105,81 @@ const Logo = styled.div`
   animation: ${zoom} 3s infinite;
 `;
 
-// Navbar component structure
-const AuthNavbar = () => {
-  const [authStatus, setAuthStatus] = useState('Login | SignUp')
-  const backend_url = 'http://127.0.0.1:5000/'
-  const checkStatus = () => {
-    let token = localStorage.getItem('jwtToken');
-    console.log("The token:")
-    console.log(token)
-    if (token) {
-      setAuthStatus('Logout')
-    }
-    else {
-      setAuthStatus('Login | SignUp')
-    }
+// Function to get initials from the user's name
+const getInitials = (name) => {
+  if (!name) return '';
+  const names = name.split(' ');
+  const initials = names.map(n => n[0]).join('');
+  return initials.toUpperCase();
+};
 
-  }
+// Navbar component
+const AuthNavbar = () => {
+  const [authStatus, setAuthStatus] = useState('Login | SignUp');
+  const [userName, setUserName] = useState('');
+  const backend_url = 'http://127.0.0.1:5000/';
+
+  // Function to check authentication status
+  const checkStatus = () => {
+    const token = localStorage.getItem('jwtToken');
+    const name = localStorage.getItem('userName');
+    
+    // Debugging output
+    console.log('Token:', token);
+    console.log('Name from localStorage:', name);
+    
+    if (token) {
+      setAuthStatus('Logout');
+      setUserName(name || '');
+    } else {
+      setAuthStatus('Login | SignUp');
+      setUserName('');
+    }
+  };
 
   useEffect(() => {
     checkStatus(); // Run checkStatus when Navbar is loaded
   }, []);
 
   const handleLogin = () => {
-    let token = localStorage.getItem('jwtToken');
+    const token = localStorage.getItem('jwtToken');
     if (token) {
-      localStorage.removeItem('jwtToken')
-      setAuthStatus('Login | SignUp')
-    }
-    else {
+      localStorage.removeItem('jwtToken');
+      localStorage.removeItem('userName');
+      console.log('Removed token and userName from local storage');
+      setAuthStatus('Login | SignUp');
+      setUserName('');
+    } else {
+      // This line will redirect to the backend login page
       window.location.href = `${backend_url}auth/login/google`;
     }
+  };
+  
+  // Assuming you set userName somewhere in the authentication flow
+  const someFunctionThatSetsUserName = (name) => {
+    setUserName(name);
+  };
 
-
-  }
-
-  const LoginButton = ({ to, onClick, children }) => (
-    <StyledLink to={to} onClick={onClick}>
-      {children}
-    </StyledLink>
-  );
   return (
     <Nav>
-      <NavSvgBackground>
-        <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
-          <circle cx="50" cy="50" r="40" fill="#3a6ea5" />
-        </svg>
-      </NavSvgBackground>
       <Logo>MindMatters</Logo>
+      <NavLink to="/about">About</NavLink>
+      <NavLink to="/community">Community</NavLink>
+      <NavLink to="/blogs">Blogs</NavLink>
+      <NavLink to="/meditation">Meditation</NavLink>
+      <NavLink to="/self-assessment">Self-Assessment</NavLink>
+      <NavSvgBackground>
+        {/* SVG Background can be placed here */}
+      </NavSvgBackground>
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <NavLink to="/">Home</NavLink>
-        <NavLink to="/about">About Us</NavLink>
-        {/* <NavLink to="/services">Services</NavLink> */}
-        <NavLink to="/community">Community</NavLink>
-        <NavLink to="/blogs">Resources</NavLink>
-        <NavLink to="/self-assessment">Self Assessment</NavLink>
-        <LoginButton to="/" onClick={handleLogin}> {authStatus}</LoginButton>
+        {authStatus === 'Login | SignUp' ? (
+          <StyledLink to="#" onClick={handleLogin}>{authStatus}</StyledLink>
+        ) : (
+          <>
+            <Profile>{getInitials(userName)}</Profile>
+            <StyledLink to="#" onClick={handleLogin}>Logout</StyledLink>
+          </>
+        )}
       </div>
     </Nav>
   );
