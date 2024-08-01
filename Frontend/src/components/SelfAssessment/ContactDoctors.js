@@ -42,12 +42,13 @@ const ContactDoctors = () => {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-       
+
         const lat = 26.180230;
         const long = 91.748760;
-        const response = await axios.post(`${BACKEND_URL}test/getHelp`, 
-          { lat, long }, 
+        const response = await axios.get(
+          `${BACKEND_URL}test/getHelp`,
           {
+            params: { lat, long },
             headers: {
               Authorization: `Bearer ${localStorage.getItem('jwtToken')}`,
             }
@@ -80,8 +81,8 @@ const ContactDoctors = () => {
       ) : (
         doctors.map((doctor) => (
           <DoctorCard key={doctor.id}>
-            <DoctorName>{doctor.name}</DoctorName>
-            <DoctorInfo>Experience: {doctor.experience}</DoctorInfo>
+            <DoctorName>{doctor.doctor_name}</DoctorName>
+            <DoctorInfo>Experience: {doctor.years_of_experience}</DoctorInfo>
             <DoctorInfo>Address: {doctor.address}</DoctorInfo>
             <DoctorInfo>Specialization: {doctor.specialization}</DoctorInfo>
           </DoctorCard>

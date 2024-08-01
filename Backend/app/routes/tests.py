@@ -80,7 +80,7 @@ def extract_doctor_info(doctor_info_list):
     # Create the prompt
     prompt = ('This is a list of strings of data of doctors scraped from the web. '
               'Extract the doctor name, specialization, years of experience, address and '
-              'return them all as a list of JSON objects. Return nothing else as this is going '
+              'return them all as a list of JSON objects with these as the keys doctor_name,address,specialization,years_of_experience, dont change the spellings of the keys. Return nothing else as this is going '
               'to be fed in response to an API, : ' + str(doctor_info_list))
     
     # Generate content
@@ -199,11 +199,11 @@ def updateResults():
 @test_bp.route('/getHelp',methods=['GET']) 
 def getHelp():
     # Extract parameters from the request
-    data=request.get_json()
-    lat = data.get('lat')  # Use request.args for query parameters
+    # data=request.get_json()
+    lat = request.args.get('lat')  # Use request.args for query parameters
 
-    lon = data.get('long')
-    
+    lon = request.args.get('long')
+    print(lat,lon)
     # Get the API key from environment variables
     appid = os.environ.get('OPEN_WEATHER_KEY')
     
