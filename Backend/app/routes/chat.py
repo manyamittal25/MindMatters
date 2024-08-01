@@ -16,7 +16,7 @@ from ..models.community import Post
 from ..computeBlogs import computer
 import google.generativeai as genai
 from sqlalchemy import update,delete
-
+from .context import context
 
 
 client = Client("https://qwen-qwen1-5-72b-chat.hf.space/--replicas/z1vyw/")
@@ -25,12 +25,18 @@ conversation_history = []
 
 @chat_bp.route('/chat', methods=['POST'])
 def chat():
+ print("in chat route")
  global conversation_history
- user_input = request.json['message']
-
+#  user_input = request.json(['message'])
+#  print(user_input)
+ data=request.get_json()
+ print(type(data))
+ user_input=data.get('message')
+ print(user_input)
  if not conversation_history:
     conversation_history = [["System", "You are a compassionate and understanding therapist."]]
-    client.predict("You are a compassionate and understanding therapist.", api_name="/modify_system_session")
+   #  client.predict("You are a compassionate and understanding therapist.", api_name="/modify_system_session")
+    client.predict(context, api_name="/modify_system_session")
 
  conversation_history.append(["User", user_input])
 
