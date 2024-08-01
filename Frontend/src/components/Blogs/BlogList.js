@@ -201,16 +201,20 @@ const BlogLink = styled(Link)`
 
 const BlogList = () => {
     const [blogs, setBlogs] = useState([]);
-
+    const [category, setCategory] = useState('mental-health')
     useEffect(() => {
         const fetchBlogs = async () => {
-            const response = await fetch(`${BACKEND_URL}blogCat?param1=mental health`);
+            const response = await fetch(`${BACKEND_URL}blogCat?param1=${category}`);
             const data = await response.json();
             setBlogs(data);
         };
 
         fetchBlogs();
-    }, []);
+    }, [category]);
+
+    const handleCat = (cat) => {
+        setCategory(cat)
+    }
 
     return (
         <>
@@ -223,19 +227,20 @@ const BlogList = () => {
                     <TabsTitle>Search by Categories</TabsTitle>
                     <TabsContainer>
                         <CategoryTab>
-                            <img src="/images/categorytab.jpg" alt="Anxiety" /> {/* Replace with your image path */}
+                            <img src="/images/categorytab.jpg" alt="Anxiety" onClick={() => handleCat('anxiety')} />
+                            {/* Replace with your image path */}
                             <h3>Anxiety</h3>
                         </CategoryTab>
                         <CategoryTab>
-                            <img src="/images/categorytab.jpg" alt="Depression" /> {/* Replace with your image path */}
+                            <img src="/images/categorytab.jpg" alt="Depression" onClick={() => handleCat('Depression')} /> {/* Replace with your image path */}
                             <h3>Depression</h3>
                         </CategoryTab>
                         <CategoryTab>
-                            <img src="/images/categorytab.jpg" alt="Mindfulness" /> {/* Replace with your image path */}
+                            <img src="/images/categorytab.jpg" alt="Mindfulness" onClick={() => handleCat('mindfulness')} /> {/* Replace with your image path */}
                             <h3>Mindfulness</h3>
                         </CategoryTab>
                         <CategoryTab>
-                            <img src="/images/categorytab.jpg" alt="Sleep" /> {/* Replace with your image path */}
+                            <img src="/images/categorytab.jpg" alt="Sleep" onClick={() => handleCat('sleep')} /> {/* Replace with your image path */}
                             <h3>Sleep</h3>
                         </CategoryTab>
                     </TabsContainer>
