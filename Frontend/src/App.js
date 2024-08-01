@@ -17,6 +17,11 @@ import CreateBlog from './components/Blogs/CreateBlog';
 import CommunityList from './components/Community/CommunityList';
 import Footer from './components/Footer';
 import DiscussionForum from './components/Community/DiscussionForum';
+import ChatBox from './components/chatbox';
+import ChatBox2 from './components/Chatbox2';
+import SuggestionBox from './components/SelfAssessment/SuggestionBox';
+import SuggestionBoxWithTopic from './components/SelfAssessment/SuggestionBoxWithTopic';
+import ContactDoctors from './components/SelfAssessment/ContactDoctors';
 
 const AppContent = () => {
   const location = useLocation();
@@ -40,6 +45,9 @@ const AppContent = () => {
         <Route path="/create-blog" element={<CreateBlog />} />
         <Route path="/community" element={<CommunityList />} />
         <Route path="/forum/:comm" element={<DiscussionForum />} />
+        <Route path='/chatbot' element={<ChatBox2 />} />
+        <Route path="/suggestions/:topic" element={<SuggestionBoxWithTopic />} />
+        <Route path="/contact-doctors" element={<ContactDoctors />} />
       </Routes>
       <Footer />
     </>

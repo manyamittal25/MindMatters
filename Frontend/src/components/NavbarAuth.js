@@ -123,11 +123,11 @@ const AuthNavbar = () => {
   const checkStatus = () => {
     const token = localStorage.getItem('jwtToken');
     const name = localStorage.getItem('userName');
-    
+
     // Debugging output
     console.log('Token:', token);
     console.log('Name from localStorage:', name);
-    
+
     if (token) {
       setAuthStatus('Logout');
       setUserName(name || '');
@@ -154,7 +154,7 @@ const AuthNavbar = () => {
       window.location.href = `${backend_url}auth/login/google`;
     }
   };
-  
+
   // Assuming you set userName somewhere in the authentication flow
   const someFunctionThatSetsUserName = (name) => {
     setUserName(name);
@@ -163,7 +163,7 @@ const AuthNavbar = () => {
   return (
     <Nav>
       <Logo>MindMatters</Logo>
-      <NavLink to="/about">About</NavLink>
+      <NavLink to="/chatbot">Chat</NavLink>
       <NavLink to="/community">Community</NavLink>
       <NavLink to="/blogs">Blogs</NavLink>
       <NavLink to="/meditation">Meditation</NavLink>
