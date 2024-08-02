@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const StatsSection = styled.section`
@@ -11,29 +11,34 @@ const StatsSection = styled.section`
   overflow: hidden;
 `;
 
-const StatsContainer = styled.div`
-  display: flex;
-  white-space: nowrap;
-  width: calc(100% * 7); /* Adjust the multiplier based on the number of cards */
-  animation: slideLeft 30s linear infinite;
-  @keyframes slideLeft {
-    from {
-      transform: translateX(5%);
-    }
-    to {
-      transform: translateX(-100%);
-    }
+const slideLeft = keyframes`
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 `;
 
-const vibrantColors = ['#87CEFA', '#696969', '#ADD8E6', '#66CDAA', '#C0C0C0', '#6495ED', '#708090'];
+const StatsContainer = styled.div`
+  display: flex;
+  white-space: nowrap;
+  animation: ${slideLeft} 30s linear infinite;
+  transition: animation 0.5s;
+
+  &.paused {
+    animation-play-state: paused;
+  }
+`;
+
+const vibrantColors = ['#87CEFA', '#40B5AD', '#696969', '#66CDAA', '#C0C0C0', '#6495ED', '#708090'];
 
 const StatCard = styled.div`
   background: ${props => vibrantColors[props.index % vibrantColors.length]};
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  margin: 0 10px;
+  margin: 0 30px;
   flex-grow: 1;
   text-align: center;
   font-size: 20px;
@@ -42,11 +47,18 @@ const StatCard = styled.div`
   @media (max-width: 768px) {
     flex-basis: 100%; /* Make the card full width on smaller screens */
   }
+  position: relative; // Ensure proper positioning for hover effects
+  z-index: 1; // Adjust z-index if necessary
+
+  &:hover {
+    transform: scale(1.1);
+    /* Add other hover styles if needed */
+  }
 `;
 
 const HeroSection = styled.section`
   width: 100vw;
-  height: 120vh;
+  height: 120vh; /* Adjust height as needed */
   background: url('/images/hero-image.jpg') center top/cover no-repeat;
   display: flex;
   flex-direction: column;
@@ -55,8 +67,11 @@ const HeroSection = styled.section`
   color: white;
   text-align: center;
   position: relative;
-  overflow: hidden;
+  overflow: hidden; /* Ensure no extra scrollbars */
+  margin: 0; /* Ensure no unintended margin */
+  padding: 0; /* Ensure no unintended padding */
 `;
+
 
 const HeroText = styled.div`
   max-width: 600px;
@@ -146,7 +161,7 @@ const HeroComponent = () => {
     'What brings you joy right now?',
     'What are you looking forward to?',
   ];
-
+  const statsContainerRef = useRef(null);
   const mentalHealthStats = [
     '1 in 5 adults experience mental illness each year.',
     'Depression is the leading cause of disability worldwide.',
@@ -157,34 +172,31 @@ const HeroComponent = () => {
     'Half of all mental health conditions begin by age 14, and 75% by age 24, underscoring the importance of support for young people.',
   ];
 
-  const statsContainerRef = useRef(null);
+  const handleMouseEnter = () => {
+    if (statsContainerRef.current) {
+      statsContainerRef.current.classList.add('paused');
+    }
+  };
 
-  useEffect(() => {
-    const container = statsContainerRef.current;
-
-    const handleAnimationEnd = () => {
-      console.log('Animation ended');
-      container.style.animation = ''; // Clear existing animation
-      setTimeout(() => {
-        container.style.animation = 'slideLeft 10s linear infinite'; // Restart animation without count
-        console.log('Animation restarted');
-      }, 100); // Small delay to ensure animation styles are cleared
-      container.addEventListener('animationend', handleAnimationEnd);
-    };
-
-    container.addEventListener('animationend', handleAnimationEnd);
-
-    return () => {
-      container.removeEventListener('animationend', handleAnimationEnd);
-    };
-  }, []);
+  const handleMouseLeave = () => {
+    if (statsContainerRef.current) {
+      statsContainerRef.current.classList.remove('paused');
+    }
+  };
 
   return (
     <>
       <StatsSection>
         <StatsContainer ref={statsContainerRef}>
-          {mentalHealthStats.map((stat, index) => (
-            <StatCard key={index} index={index}>{stat}</StatCard>
+          {[...mentalHealthStats, ...mentalHealthStats].map((stat, index) => (
+            <StatCard
+              key={index}
+              index={index}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              {stat}
+            </StatCard>
           ))}
         </StatsContainer>
       </StatsSection>
@@ -207,5 +219,4 @@ const HeroComponent = () => {
     </>
   );
 };
-
 export default HeroComponent;

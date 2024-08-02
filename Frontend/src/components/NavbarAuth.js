@@ -26,19 +26,25 @@ const zoomInOut = keyframes`
 const NavLink = styled(Link)`
   color: #4a4a4a; /* Dark text color */
   text-decoration: none;
-  font-size: 18px;
+  font-size: 19px; /* Reduced font size */
   font-family: 'Roboto', sans-serif; /* Modern font style */
   z-index: 1; /* Ensure links are above the SVG */
-  margin: 0 10px;
+  margin: 0 20px; /* Reduced margin */
   &:hover {
     color: #3a6ea5; /* Hover color */
+  }
+
+  @media (max-width: 768px) {
+    font-size: 12px; /* Further reduce font size for smaller screens */
+    margin: 0 5px; /* Further reduce margin for smaller screens */
   }
 `;
 
 const NavLinksContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  flex: 1;
 `;
 
 const StyledLink = styled(Link)`
@@ -46,7 +52,7 @@ const StyledLink = styled(Link)`
   color: #4a4a4a;
   border: 1px solid #4a4a4a;
   border-radius: 20px;
-  padding: 5px 15px;
+  padding: 5px 10px; /* Adjusted padding */
   text-decoration: none;
   font-size: 16px;
   font-family: 'Roboto', sans-serif;
@@ -55,28 +61,44 @@ const StyledLink = styled(Link)`
     background: #f0f0f0; /* Hover background color */
     color: #3a6ea5; /* Hover text color */
   }
+
+  @media (max-width: 768px) {
+    padding: 5px 8px; /* Adjust padding for smaller screens */
+    font-size: 14px; /* Adjust font size for smaller screens */
+  }
 `;
 
 const Profile = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 35px; /* Adjusted size */
+  height: 35px; /* Adjusted size */
   background-color: #f0f0f0;
   border-radius: 50%;
-  font-size: 16px;
+  font-size: 14px; /* Adjusted font size */
   font-weight: bold;
   color: #333;
-  margin: 0 15px;
+  margin: 0 8px; /* Adjusted margin */
   text-align: center;
+
+  @media (max-width: 768px) {
+    width: 30px; /* Further adjust size for smaller screens */
+    height: 30px; /* Further adjust size for smaller screens */
+    font-size: 12px; /* Further adjust font size for smaller screens */
+    margin: 0 5px; /* Further adjust margin for smaller screens */
+  }
 `;
 
 const Logo = styled.div`
   font-family: 'Pacifico', cursive; /* Artistic font */
-  font-size: 24px;
+  font-size: 22px;
   color: #3a6ea5;
   animation: ${zoom} 3s infinite;
+
+  @media (max-width: 768px) {
+    font-size: 18px; /* Adjust font size for smaller screens */
+  }
 `;
 
 const LogoLink = styled(Link)`
@@ -96,14 +118,17 @@ const NavbarContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 40px;
-  width: 100%; /* Ensures navbar doesn't stretch full width on larger screens */
+  padding: 0 40px; /* Increased padding for height */
+  height: 80px; /* Set height for the navbar */
+  width: 100%;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
 
   @media (max-width: 768px) {
-    flex-direction: column; /* Stack elements vertically on small screens */
+    flex-direction: row; /* Keep elements in one line */
+    padding: 0 20px; /* Adjust padding for smaller screens */
+    height: auto; /* Adjust height for smaller screens */
   }
 `;
 
