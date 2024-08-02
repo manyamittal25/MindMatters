@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
-// Keyframes for zoom animation
 const zoom = keyframes`
   0%, 100% {
     transform: scale(1);
@@ -12,7 +11,6 @@ const zoom = keyframes`
   }
 `;
 
-// Keyframes for zoom in and zoom out animation for the background
 const zoomInOut = keyframes`
   0% {
     transform: scale(1);
@@ -25,54 +23,32 @@ const zoomInOut = keyframes`
   }
 `;
 
-// Navigation bar container with background color and padding
-const Nav = styled.nav`
-  background: #fff8dc; /* Light background color */
-  height: 70px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 40px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  position: relative;
-  overflow: hidden;
-`;
-
-// Styling for the SVG background
-const NavSvgBackground = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  opacity: 0.1; /* Make the SVG subtle */
-  animation: ${zoomInOut} 10s infinite;
-  pointer-events: none; /* Allow clicks to pass through */
-`;
-
-// Styling for the navigation links
 const NavLink = styled(Link)`
   color: #4a4a4a; /* Dark text color */
   text-decoration: none;
-  margin: 0 15px;
   font-size: 18px;
   font-family: 'Roboto', sans-serif; /* Modern font style */
   z-index: 1; /* Ensure links are above the SVG */
+  margin: 0 10px;
   &:hover {
     color: #3a6ea5; /* Hover color */
   }
 `;
 
-// Special styling for the "Login" button and profile initials
+const NavLinksContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
 const StyledLink = styled(Link)`
   background: #fff;
   color: #4a4a4a;
   border: 1px solid #4a4a4a;
   border-radius: 20px;
-  padding: 8px 20px;
+  padding: 5px 15px;
   text-decoration: none;
-  font-size: 18px;
+  font-size: 16px;
   font-family: 'Roboto', sans-serif;
   z-index: 1; /* Ensure button is above the SVG */
   &:hover {
@@ -96,7 +72,6 @@ const Profile = styled.div`
   text-align: center;
 `;
 
-// Styling for the "MindMatters" text
 const Logo = styled.div`
   font-family: 'Pacifico', cursive; /* Artistic font */
   font-size: 24px;
@@ -116,6 +91,22 @@ const getInitials = (name) => {
   return initials.toUpperCase();
 };
 
+const NavbarContainer = styled.div`
+  background: #FFFFE0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  width: 100%; /* Ensures navbar doesn't stretch full width on larger screens */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    flex-direction: column; /* Stack elements vertically on small screens */
+  }
+`;
+
 // Navbar component
 const AuthNavbar = () => {
   const [authStatus, setAuthStatus] = useState('Login | SignUp');
@@ -126,10 +117,6 @@ const AuthNavbar = () => {
   const checkStatus = () => {
     const token = localStorage.getItem('jwtToken');
     const name = localStorage.getItem('userName');
-
-    // Debugging output
-    console.log('Token:', token);
-    console.log('Name from localStorage:', name);
 
     if (token) {
       setAuthStatus('Logout');
@@ -158,24 +145,18 @@ const AuthNavbar = () => {
     }
   };
 
-  // Assuming you set userName somewhere in the authentication flow
-  const someFunctionThatSetsUserName = (name) => {
-    setUserName(name);
-  };
-
   return (
-    <Nav>
+    <NavbarContainer>
       <LogoLink to="/">
         <Logo>MindMatters</Logo>
       </LogoLink>
-      <NavLink to="/chatbot">Chat</NavLink>
-      <NavLink to="/community">Community</NavLink>
-      <NavLink to="/blogs">Blogs</NavLink>
-      <NavLink to="/meditation">Meditation</NavLink>
-      <NavLink to="/self-assessment">Self-Assessment</NavLink>
-      <NavSvgBackground>
-        {/* SVG Background can be placed here */}
-      </NavSvgBackground>
+      <NavLinksContainer>
+        <NavLink to="/chatbot">Chat</NavLink>
+        <NavLink to="/community">Community</NavLink>
+        <NavLink to="/blogs">Blogs</NavLink>
+        <NavLink to="/meditation">Meditation</NavLink>
+        <NavLink to="/self-assessment">Self-Assessment</NavLink>
+      </NavLinksContainer>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         {authStatus === 'Login | SignUp' ? (
           <StyledLink to="#" onClick={handleLogin}>{authStatus}</StyledLink>
@@ -186,8 +167,7 @@ const AuthNavbar = () => {
           </>
         )}
       </div>
-    </Nav>
+    </NavbarContainer>
   );
 };
-
 export default AuthNavbar;

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 
-// Stats section styling
 const StatsSection = styled.section`
   position: relative;
   z-index: 1;
@@ -27,24 +26,24 @@ const StatsContainer = styled.div`
   }
 `;
 
-// Array of vibrant colors for stats cards
 const vibrantColors = ['#87CEFA', '#696969', '#ADD8E6', '#66CDAA', '#C0C0C0', '#6495ED', '#708090'];
 
-// Styling for individual stats cards
 const StatCard = styled.div`
   background: ${props => vibrantColors[props.index % vibrantColors.length]};
   border-radius: 10px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin: 0 10px;
-  min-width: 250px;
+  flex-grow: 1;
   text-align: center;
   font-size: 20px;
   font-family: 'Roboto', sans-serif;
   color: #fff;
+  @media (max-width: 768px) {
+    flex-basis: 100%; /* Make the card full width on smaller screens */
+  }
 `;
 
-// Hero section styling
 const HeroSection = styled.section`
   width: 100vw;
   height: 120vh;
@@ -59,7 +58,6 @@ const HeroSection = styled.section`
   overflow: hidden;
 `;
 
-// Text container inside hero section with semi-transparent background
 const HeroText = styled.div`
   max-width: 600px;
   padding: 20px;
@@ -68,7 +66,6 @@ const HeroText = styled.div`
   top: 50px;
 `;
 
-// Keyframes for pulse animation
 const PulseAnimation = keyframes`
   0% {
     transform: scale(1);
@@ -81,7 +78,6 @@ const PulseAnimation = keyframes`
   }
 `;
 
-// Keyframes for bounce animation
 const BounceAnimation = keyframes`
   0%, 100% {
     transform: translateY(0);
@@ -91,15 +87,19 @@ const BounceAnimation = keyframes`
   }
 `;
 
-// Container for question spheres with centered alignment
 const SphereContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 50px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 135px;
+  }
 `;
 
-// Styling for individual spheres with unique colors
 const Sphere = styled.div`
   width: 200px;
   height: 200px;
@@ -116,9 +116,13 @@ const Sphere = styled.div`
   color: #000000;
   font-family: 'Georgia', serif;
   font-size: 18px;
+  @media (max-width: 768px) {
+    width: 150px;
+    height: 150px;
+    margin: 20px;
+  }
 `;
 
-// Individual spheres with different animations
 const Sphere1 = styled(Sphere)`
   animation: ${PulseAnimation} 5s ease-in-out infinite;
 `;
@@ -146,7 +150,7 @@ const HeroComponent = () => {
   const mentalHealthStats = [
     '1 in 5 adults experience mental illness each year.',
     'Depression is the leading cause of disability worldwide.',
-    'Early intervention programs for youth can reduce the risk of serious mental health issues by 70%',
+    'Early intervention programs for youth can reduce the risk of serious mental health issues by 70%.',
     'Mental health services can reduce healthcare costs.',
     'Regular meditation can reduce the symptoms of anxiety by up to 60%.',
     'Over 60% of youth with major depression do not receive any mental health treatment.',
