@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import styled, { keyframes } from 'styled-components';
 
@@ -37,7 +37,6 @@ const Nav = styled.nav`
   position: relative;
   overflow: hidden;
 `;
-
 
 // Styling for the SVG background
 const NavSvgBackground = styled.div`
@@ -82,16 +81,17 @@ const LoginButton = styled(Link)`
   }
 `;
 
-
 // Styling for the "MindMatters" text
 const Logo = styled.div`
   font-family: 'Pacifico', cursive; /* Artistic font */
   font-size: 24px;
   color: #3a6ea5;
-  z-index: 1;
   animation: ${zoom} 3s infinite;
 `;
 
+const LogoLink = styled(Link)`
+  text-decoration: none;
+`;
 
 // Navbar component structure
 const Navbar = () => {
@@ -102,12 +102,14 @@ const Navbar = () => {
           <circle cx="50" cy="50" r="40" fill="#3a6ea5" />
         </svg>
       </NavSvgBackground>
-      <Logo>MindMatters</Logo>
+      <LogoLink to="/">
+        <Logo>MindMatters</Logo>
+      </LogoLink>
       <div style={{ display: 'flex', alignItems: 'center' }}>
         <NavLink to="/">Home</NavLink>
         <NavLink to="/about">About Us</NavLink>
         <NavLink to="/services">Services</NavLink>
-          <NavLink to="/blogs">Resources</NavLink>
+        <NavLink to="/blogs">Resources</NavLink>
         <NavLink to="/self-assessment">Self Assessment</NavLink>
         <LoginButton to="/login">Login | SignUp</LoginButton>
       </div>

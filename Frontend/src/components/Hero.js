@@ -1,20 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
-
-// Keyframes for continuous sliding
-const SlideAnimation = keyframes`
-  0% {
-    transform: translateX(100%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-`;
 
 // Stats section styling
 const StatsSection = styled.section`
-  position: relative; /* Ensure it can overlay other content */
-  z-index: 1; /* Ensure it's above the hero section */
+  position: relative;
+  z-index: 1;
   background: #f7f9fc;
   padding: 40px 0;
   display: flex;
@@ -22,13 +12,19 @@ const StatsSection = styled.section`
   overflow: hidden;
 `;
 
-// Container for stats cards with sliding animation
 const StatsContainer = styled.div`
   display: flex;
   white-space: nowrap;
-  animation: ${SlideAnimation} 80s linear infinite; /* Adjust speed */
-  animation-delay: 0s; /* Starts animation instantly */
-  animation-play-state: running; /* Ensures the animation starts immediately */
+  width: calc(100% * 7); /* Adjust the multiplier based on the number of cards */
+  animation: slideLeft 30s linear infinite;
+  @keyframes slideLeft {
+    from {
+      transform: translateX(5%);
+    }
+    to {
+      transform: translateX(-100%);
+    }
+  }
 `;
 
 // Array of vibrant colors for stats cards
@@ -44,7 +40,7 @@ const StatCard = styled.div`
   min-width: 250px;
   text-align: center;
   font-size: 20px;
-  font-family: 'Roboto', sans-serif; /* Different font style */
+  font-family: 'Roboto', sans-serif;
   color: #fff;
 `;
 
@@ -52,7 +48,7 @@ const StatCard = styled.div`
 const HeroSection = styled.section`
   width: 100vw;
   height: 120vh;
-  background: url('/images/hero-image.jpg') center top/cover no-repeat; /* Adjust background position */
+  background: url('/images/hero-image.jpg') center top/cover no-repeat;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -60,7 +56,7 @@ const HeroSection = styled.section`
   color: white;
   text-align: center;
   position: relative;
-  overflow: hidden; /* Ensure the background image doesn't overflow */
+  overflow: hidden;
 `;
 
 // Text container inside hero section with semi-transparent background
@@ -69,7 +65,7 @@ const HeroText = styled.div`
   padding: 20px;
   background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
-  top: 50px; /* Adjust position as needed */
+  top: 50px;
 `;
 
 // Keyframes for pulse animation
@@ -100,7 +96,7 @@ const SphereContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 50px; /* Adjust margin to position below hero section */
+  margin-top: 50px;
 `;
 
 // Styling for individual spheres with unique colors
@@ -116,10 +112,10 @@ const Sphere = styled.div`
   padding: 20px;
   position: relative;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  margin: 0 20px; /* Adjust margin for spacing between spheres */
-  color: #000000; /* White font color for better contrast */
-  font-family: 'Georgia', serif; /* Different font style */
-  font-size: 18px; /* Adjust font size as needed */
+  margin: 0 20px;
+  color: #000000;
+  font-family: 'Georgia', serif;
+  font-size: 18px;
 `;
 
 // Individual spheres with different animations
@@ -139,7 +135,6 @@ const Sphere4 = styled(Sphere)`
   animation: ${BounceAnimation} 3s ease-in-out infinite;
 `;
 
-// Main component rendering hero section, stats slider, and question spheres
 const HeroComponent = () => {
   const feelGoodQuestions = [
     'What are you grateful for today?',
@@ -158,10 +153,32 @@ const HeroComponent = () => {
     'Half of all mental health conditions begin by age 14, and 75% by age 24, underscoring the importance of support for young people.',
   ];
 
+  const statsContainerRef = useRef(null);
+
+  useEffect(() => {
+    const container = statsContainerRef.current;
+
+    const handleAnimationEnd = () => {
+      console.log('Animation ended');
+      container.style.animation = ''; // Clear existing animation
+      setTimeout(() => {
+        container.style.animation = 'slideLeft 10s linear infinite'; // Restart animation without count
+        console.log('Animation restarted');
+      }, 100); // Small delay to ensure animation styles are cleared
+      container.addEventListener('animationend', handleAnimationEnd);
+    };
+
+    container.addEventListener('animationend', handleAnimationEnd);
+
+    return () => {
+      container.removeEventListener('animationend', handleAnimationEnd);
+    };
+  }, []);
+
   return (
     <>
       <StatsSection>
-        <StatsContainer>
+        <StatsContainer ref={statsContainerRef}>
           {mentalHealthStats.map((stat, index) => (
             <StatCard key={index} index={index}>{stat}</StatCard>
           ))}

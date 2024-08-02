@@ -101,8 +101,11 @@ const Logo = styled.div`
   font-family: 'Pacifico', cursive; /* Artistic font */
   font-size: 24px;
   color: #3a6ea5;
-  z-index: 1;
   animation: ${zoom} 3s infinite;
+`;
+
+const LogoLink = styled(Link)`
+  text-decoration: none;
 `;
 
 // Function to get initials from the user's name
@@ -162,7 +165,9 @@ const AuthNavbar = () => {
 
   return (
     <Nav>
-      <Logo>MindMatters</Logo>
+      <LogoLink to="/">
+        <Logo>MindMatters</Logo>
+      </LogoLink>
       <NavLink to="/chatbot">Chat</NavLink>
       <NavLink to="/community">Community</NavLink>
       <NavLink to="/blogs">Blogs</NavLink>
